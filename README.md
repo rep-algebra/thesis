@@ -45,5 +45,20 @@ $ make Tesis.ps
 * Para tener el archivo en PDF.
 $ make Tesis.pdf
 
+---
+
 This repository contains the original thesis source files and derived documentation.
 Unless otherwise stated, the content is under the author's copyright (Cristian S. Rocha, 2002).
+
+---
+
+Alumno: Cristian S. Rocha <crocha@dc.uba.ar>.
+Directora: Lic. Irene Louseau <irene@dc.uba.ar>.
+
+Departamento de Computación,
+Facultad de Ciencias Exactas y Naturales,
+Universidad de Buenos Aires.
+
+Agosto de 2002,
+Buenos Aires,
+Argentina.                                                                                                                                        crocha@hidrogeno ~/Documentos/PidggyWindows/Tesis/cdrom
