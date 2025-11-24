@@ -45,6 +45,15 @@ $ make Tesis.ps
 * Para tener el archivo en PDF.
 $ make Tesis.pdf
 
+
+## DOI
+
+The original 2002 thesis introducing the Repetition Algebra (AS2) is archived at Zenodo:
+
+**DOI: https://doi.org/10.5281/zenodo.17704530**
+
+Please cite this DOI when referencing the theoretical foundations or original formulation.
+
 ---
 
 This repository contains the original thesis source files and derived documentation.
@@ -64,11 +73,3 @@ Buenos Aires,
 Argentina.                                                                                                                                        crocha@hidrogeno ~/Documentos/PidggyWindows/Tesis/cdrom
 
 ---
-
-## DOI
-
-The original 2002 thesis introducing the Repetition Algebra (AS2) is archived at Zenodo:
-
-**DOI: https://doi.org/10.5281/zenodo.17704530**
-
-Please cite this DOI when referencing the theoretical foundations or original formulation.
