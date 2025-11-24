@@ -11,7 +11,7 @@ this problem, these thesis introduces the repeats algebra theory to relate a new
 structure, AS2, to the supermaximal repeats in a set of subsequences of a sequence
 search problem.
 
-## Español (original)
+## Español (original, 2002)
 
 El objetivo de esta tesis es proponer una nueva metodología para identiﬁcar se-
 cuencias repetidas exactas en un conjunto de fragmentos de una secuencia de ADN, y
@@ -22,7 +22,7 @@ introduce la teoría de álgebra de repeticiones. Permitiendo así relacionar co
 te una nueva estructura de datos, AS 2 , con el problema de encontrar las repeticiones
 supermaximales de un conjunto de subsecuencias de una secuencia.
 
-## English (corrected)
+## English (modern corrected version)
 
 This work introduces a method for identifying exact DNA repeats from a collection of 
 sequence fragments, enabling queries during the progression of a random sequencing strategy. 
@@ -31,8 +31,8 @@ all repeats using conventional approaches. To address this limitation, this thes
 the Repetition Algebra theory and establishes its connection to a new data structure, AS2,
 which relates supermaximal repeats to sets of subsequences within the sequence search problem.
 
-Note: The English abstract above is reproduced verbatim from the original thesis document.
-The “English corrected” section provides a modernized and grammatically improved version for clarity.
+Note: The “English (original)” abstract is reproduced verbatim from the thesis.
+The “English (corrected)” section provides a modernized, grammatically improved version.
 
 ## Generación de los archivos TEX y graficos postscript de la tesis.
 
@@ -54,22 +54,28 @@ The original 2002 thesis introducing the Repetition Algebra (AS2) is archived at
 
 Please cite this DOI when referencing the theoretical foundations or original formulation.
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17704530.svg)](https://doi.org/10.5281/zenodo.17704530)
+
+Rocha, C. S. (2002). Search for repeated sequences in a random sequencing model. University of Buenos Aires. https://doi.org/10.5281/zenodo.17704530
+
+
+
 ---
 
 This repository contains the original thesis source files and derived documentation.
 Unless otherwise stated, the content is under the author's copyright (Cristian S. Rocha, 2002).
 
 ---
+## Original Academic Information
 
-Alumno: Cristian S. Rocha <crocha@dc.uba.ar>.
-Directora: Lic. Irene Louseau <irene@dc.uba.ar>.
-
-Departamento de Computación,
-Facultad de Ciencias Exactas y Naturales,
-Universidad de Buenos Aires.
-
-Agosto de 2002,
-Buenos Aires,
-Argentina.                                                                                                                                        crocha@hidrogeno ~/Documentos/PidggyWindows/Tesis/cdrom
+    Alumno: Cristian S. Rocha <crocha@dc.uba.ar>  
+    Directora: Lic. Irene Louseau <irene@dc.uba.ar>  
+    
+    Departamento de Computación  
+    Facultad de Ciencias Exactas y Naturales  
+    Universidad de Buenos Aires  
+    
+    Agosto de 2002  
+    Buenos Aires, Argentina
 
 ---
