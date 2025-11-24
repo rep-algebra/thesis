@@ -1,0 +1,206 @@
+\chapter{\label{Introduccion}Introducción}
+
+\section{\label{Origen}Origen de la Tesis}
+
+A mediados del año 1998 se realizó el primer acercamiento de investigadores del \emph{Instituto de Investigaciones en Ingeniería Genética y Biología Molecular} (INGEBI) con investigadores del \emph{Departamento de Computación} (DC), ambos pertenecientes de la \emph{Facultad de Ciencias Exactas y Naturales} (FCEN) de la \emph{Universidad de Buenos Aires} (UBA), representados por el Dr. Mariano Levin y la Lic. Irene Loiseau respectivamente. En el mismo, se planteó la posibilidad de construir herramientas computacionales para resolver problemas específicos a tareas de investigación del INGEBI. En este primer acercamiento surgieron problemas de comunicación entre los investigadores de las dos especialidades por el desconocimiento mutuo de los términos usados, por ello se conformó el primer grupo interdisciplinario entre estudiantes, docentes e investigadores de Biología y Computación.
+
+Este grupo tiene como primer objetivo formar especialistas en el campo de la \emph{Biología Computacional}; y luego, pero no menos importante, construir nuevas herramientas para optimizar las tareas de investigación en \emph{Biología Molecular}. Ambos objetivos se están llevando a cabo mediante la materia de grado \emph{Introducción a la Biología Computacional} que se dicta en el DC, y con la implementación de \emph{la base de datos de secuencias repetidas} del genoma del \emph{Trypanosoma cruzi} , parásito causante del Mal de Chagas. La misma puede consultarse desde la Internet en la dirección http://machi.exp.dc.uba.ar/.
+
+La base de datos se presentó como una solución parcial a un problema planteado por el Dr. Levin: {}``clasificar las secuencias repetidas del \emph{T. cruzi}''\footnote{Una repetición es una secuencia de símbolos que se repite dentro de otra secuencia de símbolos. Por ejemplo, la secuencia de símbolos del alfabeto {}``issi'' es repetición de la secuencia {}``mississippi''. }. Como se verá con más detalle en la sección \ref{repeticiones}, las secuencias repetidas, o repeticiones, son clases de secuencias de ADN {}``parecidas'' que se encuentran en un mismo genoma. El INGEBI, como participante del grupo de instituciones involucradas con los proyectos genoma de las especies Trypanosómicas - \emph{Tri-Tryp Consortium} - se comprometió a especializarse en las repeticiones de los parásitos que se congregan en el proyecto; para ello debe recolectar, clasificar y crear una nomenclatura clara, sin ambigüedades, para cada repetición. A su vez el grupo de Biología Computacional diseñara las herramientas necesarias para completar este trabajo.
+
+Durante el proceso de maduración del grupo surgieron dos aproximaciones diferentes para encarar el trabajo:
+
+\begin{description}
+\item [Búsqueda~de~repeticiones~conocidas]El objetivo es encontrar copias de repeticiones previamente estudiadas por métodos biológicos o computacionales.
+\item [Búsqueda~de~nuevas~repeticiones]El objetivo es encontrar patrones que indiquen la existencia de repeticiones.
+\end{description}
+
+Estas aproximaciones no son por completo independientes sino también complementarias, ya que la primera puede usar a la segunda como entrada de datos. En la figura \ref{Approachs} se puede observar la interacción entre los procesos de búsqueda de repeticiones, conocidas y nuevas. Aunque este fue el primer diseño para encarar el proyecto propuesto por el Dr. Levin, se decidió por uno que acompañe el proceso de secuenciamiento del \emph{T. cruzi}, ver sección \ref{Proyectos Genomas}. Es por eso que actualmente se esta desarrollando el modelo descripto en la figura\ref{NewApproach}.
+
+\begin{figure}
+{\centering \includegraphics{Approachs.eps} \par}
+\caption[Interacción entre programas de búsqueda de repeticiones conocidas y de desconocidas.]{\label{Approachs}Interacción entre programas de búsqueda de repeticiones conocidas y de desconocidas. Los datos para buscar y encontrar las nuevas secuencias provienen de una \emph{Base de Datos de Secuencias de ADN} (GenBank por ejemplo) y se las procesa para encontrar los patrones conocidos. Los mismos son almacenados en la \emph{Base de Datos de Repeticiones} para luego ser usados por el programa de búsqueda de repeticiones existentes.}
+\end{figure}
+
+\begin{figure}
+{\centering \resizebox*{1\columnwidth}{!}{\includegraphics{RealApproachs.eps}} \par}
+\caption[Nueva aproximación de la Base de Datos Activa.]{\label{NewApproach}Nueva aproximación de la Base de Datos Activa. Existen dos sistemas interactuando para la búsqueda de repeticiones. El primero basado en técnicas de aprendizaje automático puede reconocer estructuras complejas de estructuras de ADN (Romero2001, ver \cite{Romero2001}). El segundo sistema, basado en técnicas de combinatoria, recoge la información de una base de datos HTGs (High Throughput Genomic sequences - Secuencias genómicas obtenidas con procesos de alto rendimiento) en fase 0 (ver \emph{The HTG GenBank Division}, http://www.ncbi.nlm.nih.gov/HTGS/) para ser procesadas en búsqueda de nuevas repeticiones exactas (Tesis). El motor de inferencia de patrones de repeticiones exactas es un modulo es una tarea pendiente del grupo interdisciplinario.}
+\end{figure}
+
+El problema principal que se encontró a la hora de encarar la búsqueda de las copias dentro de fragmentos es la necesidad de modelar la repetición, concepto biológico difuso, y es por ello que se encaró la primera aproximación con técnicas de aprendizaje automático descripto en \cite{Romero2001}. En la figura \ref{Approachs} se muestra en gris oscuro en que parte del proyecto esta involucrado este trabajo.
+
+Por el otro lado, en esta tesis se encara el problema de buscar nuevas repeticiones, pero no de la manera clásica: repeticiones de un fragmento. El autor plantea buscar repeticiones en un conjunto de fragmentos obtenidos aleatoriamente de una secuencia mayor: el genoma, cromosoma o fragmento. Es así que la tesis cumple con el requisito de buscar repeticiones exactas dentro de una base de datos generada a través de un secuenciamiento aleatorio. La figura \ref{NewApproach} muestra en color gris claro los temas involucrados en esta tesis.
+
+El trabajo esta dividido en cuatro capítulos: la presente introducción al problema de las repeticiones, como se encara este problema en la actualidad, la estructura de datos propuesta: Árbol de sufijos de supermaximales $AS^2$, y los resultados y conclusiones pertinentes.
+
+\begin{description}
+\item [Introducción]La sección \ref{Otros Fundamentos}, complementa los fundamentos de este trabajo, abarcando otros puntos de interés más allá del proyecto genoma del \emph{T. cruzi}. En la siguiente, sección \ref{Proyectos Genomas}, se explica como las repeticiones influyen en los proyectos genomas en general. Se compara cada aproximación a los proyectos genomas en la sección \ref{Secuenciamiento Ordenado vs Aleatorio}. En la sección \ref{repeticiones} se presenta la definición biológica de las repeticiones para luego empezar a describir el problema computacionalmente. La sección \ref{Previas} introduce a conceptos que serán usados en los próximos capítulos.
+\item [Estado~del~arte]Este capítulo detalla las diferentes aproximaciones que existen en la búsqueda de repeticiones. Se intenta asociar cada aproximación al problema propuesto para luego concluir en la necesidad de construir un modelo que represente mejor el problema. Para finalizar la se presenta las formas de encarar este problema, sección \ref{Trabajos Relacionados} y el modelo de supermaximales dado en \cite{Gus97}, sección \ref{Modelo de Gusfield de repeticiones}, que será la base de nuestro trabajo.
+\item [Propuesta]Describe la teoría para demostrar que el algoritmo es correcto. Primero plantea el problema formalmente, sección \ref{Repeticiones en un modelos de secuenciamiento aleatorio}; luego propone un álgebra de repeticiones para describir que es una repetición supermaximal en éste problema, sección \ref{Algebra de Repeticiones}. Se asocia el comportamiento de un Árbol de Sufijos de Supermaximales con el Álgebra de Repeticiones para demostrar que es una estructura válida para representar nuestro problema, sección \ref{Arbol de Sufijos de Supermaximales}, y se determina los algoritmos para manejar la estructura, sección \ref{Algoritmos}.
+\item [Resultados~y~conclusiones] En este último capítulo se presentan detalles que se tuvieron en cuenta en la implementación del $AS^2$, sección \ref{Implementacion}. Se describe en la sección \ref{Resultados} diferentes resultados obtenidos de aplicar el algoritmos sobre genomas que han y están siendo secuenciando con técnicas aleatorias. Por último, puede encontrarse las conclusiones de este trabajo en la sección.
+\ref{Conclusiones}.
+\end{description}
+
+\section{\label{Otros Fundamentos}Otros Fundamentos.}
+
+Se ha comparado al Proyecto Genoma Humano con los proyectos más ambiciosos de la humanidad: la llegada a la luna o la construcción de las pirámides. La cantidad de recursos que se necesita para poder alcanzar el objetivo es abrumador, y a pesar de ello el mundo científico esta convencido de su utilidad médica y tecnológica, mas allá del carácter filosófico que pueda tener. Tanto es así que el Proyecto Genoma Humano, completado cinco años antes de lo previsto \cite{NCBINfw200}, ahora se extiende a miles de proyectos genomas que van desde virus hasta mamíferos, incluyendo especies ya extinguidas \cite{NCBINs1999}.
+
+Pero aun así existen problemas muy difíciles de abordar, incluso teniendo a disposición tantos recursos. Dentro de éstos están los inducidos por las \emph{repeticiones}. Tal es así que un genoma tan importante para Sudamérica como el del \emph{Trypanosoma cruzi} se ha interrumpido por la gran cantidad y diversidad de estos elementos\cite{MR1999,RMTC99}. Esto da pie a la necesidad de su estudio dando un nuevo punto de vista. Esta tesis aborda el problema de buscar estos elementos en un conjunto de fragmentos, y para ello plantea un nuevo modelo de repeticiones. Esto no quiere decir que es la única forma de buscar repeticiones que se conoce, sino que intenta establecer su búsqueda en un campo de batalla en que no se ha intentado antes: durante el proceso de secuenciación.  
+Los algoritmos conocidos y las técnicas biológicas intentan encontrar estos elementos en el genoma completo o directamente sobre la molécula de ADN, respectivamente. Pero esto produce contradicciones insalvables: ¿Cómo buscar repeticiones en el genoma completo si estas mismas repeticiones no nos permite completarlo? ¿Cómo podemos leer una secuencia repetida de un ADN cuando ésta es más larga de lo que nos permite las técnicas de secuenciado?
+
+Buscar las repeticiones durante el proceso de una secuenciación aleatoria permite no caer nuevamente en las contradicciones anteriores. La aleatoriedad nos asegura la completa secuenciación de genoma en forma de fragmentos, y por lo tanto no habrá que esperar al ensamblado para conocer estos elementos. Pero igual existe una pregunta que no parece tener una solución obvia. ¿Se puede ensamblar una secuencia repetida a partir de sus fragmentos? No es objetivo de esta tesis responder esta pregunta pero no se puede hablar de búsqueda de repeticiones en fragmentos sin haberla planteado. Esta tesis confía en la afirmación de la respuesta, con lo que se espera que un trabajo a futuro pueda solucionar este problema.
+
+Como se verá más adelante se podrán encontrar todas las repeticiones maximales en un conjunto de fragmentos obtenidos sin un orden específico.  Hay que notar que aunque no se tiene la respuesta al problema de secuenciar un genoma con grandes cantidades de repeticiones, este trabajo propone un nuevo camino que puede ser el primer paso a la solución tan esperada.
+
+\section{\label{Proyectos Genomas}Proyectos Genomas}
+
+Los Proyectos Genoma tienen como objetivo obtener información genómica de una especie para su eventual estudio. La misma esta almacenada en el \emph{ADN}, macro-moléculas capaces de guardar toda la información evolutiva, estructural y funcional de todas las células que componen a un individuo. Las mismas están estructuradas por dos cadenas de nucleótidos, una inversa-complemento de la otra, formando una doble hélice. Para este trabajo el concepto básico que usaremos es que el ADN puede leerse por fragmentos gracias al proceso denominado \emph{secuenciación}. \cite{Attwood1999}
+
+Simplificando de manera informativa, completar un proyecto genoma necesita de una continua realización de tareas de secuenciación, ensamblado y anotación. La \emph{secuenciación} es un procedimiento analítico para obtener el orden de los nucleótidos de un ADN\footnote{Este procedimiento no se limita únicamente a cadenas de nucleótidos, sino también a cadenas de aminoácidos. Pero nuestro objetivo es trabajar con nucleótidos, ya que las repeticiones en cadenas de aminoácidos tienen implicancias completamente diferentes que están fuera del alcance de la tesis.} \cite{IUPACCompendium}, o de un punto de vista computacional es la tarea de traducir el DNA en información digital, o computacionalmente tratable. La información obtenida es una secuencia de símbolos (A, C, G, T); cada uno representa a uno de los cuatro \emph{nucleótidos}: adenina, citosina, guanina y timina -también conocidos como \emph{bases}-. Esta tarea está limitada técnicamente a la obtención de secuencias de 400 a 700 símbolos de largo. Comparado con el genoma de una especie de \( 5 \cdot 10^{11} \) \emph{pares de bases} (pb) de largo, es casi insignificante lo que se puede realizar en una sola lectura, apenas un \( 1,4 \cdot 10^{-7} \)\% del mismo. Por eso existe la tarea de \emph{ensamblado}; que se encarga de \emph{clasificar}, \emph{ordenar} y \emph{concatenar} los fragmentos con el objetivo de obtener la secuencia completa. La \emph{notación}, en cambio, intenta dar \emph{sintaxis} y \emph{semántica} al genoma \cite{NCBIm2001}.
+
+Las secuencias de 400 a 700 pb, nombradas anteriormente, se las conoce como fragmentos ya que son una parte del DNA y se obtiene por medio de métodos de \emph{fragmentación} y \emph{clonación}.
+
+Todas las tareas están estrechamente relacionadas, por ende un problema con cualquiera de éstas puede inducir al fracaso del proyecto. ¿Pero qué problemas podemos encontrar durante todo este proceso?
+
+\begin{description}
+
+\item [\emph{Secuenciamiento}]El principal problema del secuenciamiento es la estructura natural del DNA. Existen diferentes estructuras que promueven su plegamiento obstruyendo la lectura. Este problema se resuelve usando diferentes \emph{geles}\footnote{Los geles son materiales bioquímicos en donde se sumerge el DNA para ser secuenciado.} como soporte del secuenciado. Pero no existe una única solución, con lo que puede ocurrir que para cada fragmento sea necesario cambiar de gel. Estas regiones se las reconoce por tener alto contenido de G-C (Guanina y Citosina), ser palíndromos\footnote{Según la Real Academia Española: palabra o frase que se lee igual de izquierda a derecha, que de derecha a izquierda; p. ej., \emph{anilina}, \emph{dábale arroz a la zorra el abad}.\\En bioquímica: una secuencia de DNA que es igual a su inversa-complemento, por ejemplo: \emph{ACTGCAGT}.} o homopoliméricas\footnote{Secuencias donde predomina un nucleótido.}. Un segundo problema, pero de menor medida, es secuenciar regiones no deseadas. La secuenciación involucra un proceso previo de preparación de los fragmentos. Estos se los selecciona de una \emph{biblioteca}, conjunto de fragmentos seleccionados para el secuenciamiento. Cada fragmento esta contenido en un \emph{vector} o \emph{BAC}: soporte para realizar el proceso de clonado necesario para la secuenciación. El problema es que el vector también es DNA, por lo tanto se puede leer tanto información del soporte como del fragmento. Este problema se resuelve filtrando las secuencias correspondientes al vector. Luego podemos encontrar los problemas clásicos de error por limitaciones técnicas de los métodos usados.\cite{Attwood1999,Roach1998}
+
+\item [\emph{Ensamblado}]\label{Ensamblado} A diferencia de la secuenciación, los problemas no son bioquímicos sino lógicos. A partir de una base de datos depurada\footnote{Bases de datos de secuencias que fueron tratadas para eliminar regiones no deseadas: baja calidad de nucleótidos, vectores y errores.\\Se la puede encontrar en la bibliografía como {}``base de datos curadas'', ya se lo ha traducido literalmente del ingles {}``curated databases''. La traducción elegida, \emph{base de datos depurada}, expresa mejor el concepto.} donde ya se han resuelto los problemas de la secuenciación se deben obtener la secuencia completa del genoma. Para ellos se va construyendo fragmentos más grandes, combinando tareas de clasificación y ensamblado. La \emph{clasificación} tiene como objetivo identificar las secuencias que corresponden a una misma región para obtener una \emph{secuencia consenso} que la represente.\\El \emph{ensamblado} tiene como objetivo poder concatenar estas secuencias consenso; la secuencia obtenida se la conoce como \emph{contig}.\\Cuando trabajamos con repeticiones con largos mayores al límite de los que nos proporcionan los secuenciadores (~700 pb) o repeticiones en los extremos de los consensos, nos encontramos con falsas clasificaciones y ambigüedades en el armado de contigs respectivamente. Un cluster es falso si se toma secuencias que corresponden a diferentes regiones del genoma como de una misma región (Ver figura \ref{Figure:FalsoCluster}). Y las ambigüedades se produce por no determinar de forma univoca como ordenar los contigs que contienen una repetición en sus extremos (Ver figura \ref{Figure:Ambiguedad}).\cite{NCBIm2001,Roach1998,BorkCopley2001}
+
+\begin{figure}
+{\centering \resizebox*{1\columnwidth}{!}{\includegraphics{FalsoCluster.eps}} \par}
+\caption[Esquema de generación de un cluster falso.]{\label{Figure:FalsoCluster}Esquema de generación de un cluster falso. La figura representa cinco regiones, tres de ellas, \emph{R}, son copias de una misma repetición. Relacionando las lecturas por similitud, se obtienen tres clusters. El cluster \emph{B} unifica las tres regiones correspondientes a la repetición \emph{R}, por lo tanto esta configuración de contigs es falsa.}
+\end{figure}
+
+\begin{figure}
+{\centering \resizebox*{1\columnwidth}{!}{\includegraphics{Ambiguedad.eps}} \par}
+\caption[Esquema de ambigüedad.]{\label{Figure:Ambiguedad}Esquema de ambigüedad. A partir de la figura \ref{Figure:FalsoCluster} se tienen cinco clusters. Si se intenta ordenas estos clusters se tiene infinitas soluciones posibles si desconocemos que los clusters de azul claro no son repeticiones. En el caso que sabemos que no lo son, existen solo dos formas de ordenar los clusters.}
+\end{figure}
+
+\item [\emph{Anotación}]Existen diversas complicaciones a la hora de plasmar las conclusiones o investigaciones en una región exacta del genoma y todo se debe a la complejidad del modelo tratado. Por ejemplo, actualmente las bases de datos genómicas almacenan miles de \emph{proteínas hipotéticas} provocando entre los investigadores diferentes interpretaciones \cite{Russo00,Ashburner00}. La imposibilidad de clasificar e identificar cada elemento del genoma de manera unívoca a enviciado a publicar resultados obtenidos computacionalmente, muchas de ellas con técnicas heurísticas, como verdades absolutas. Y esto ocurre por la desinformación sobre estas técnicas, sumado a que todavía el genoma es un laberinto oscuro, declarar a las herramientas computacionales como funcionalmente válidas es dejar pistas falsas en la interpretación del genoma.\cite{Roach1998,NCBIm2001}
+\end{description}
+
+Como se puede observar, hemos hecho hincapié en las repeticiones. Esto no implica que las repeticiones son la única fuente de problemas, pero si de su gran mayoría, y puede encontrarse en cada etapa del proceso de un proyecto genoma.
+
+\section{\label{Secuenciamiento Ordenado vs Aleatorio}Secuenciamiento Ordenado vs. Aleatorio.}
+
+Existen dos tipos básicos de \emph{secuenciamientos} para encarar proyectos genoma: \emph{ordenado} y \emph{aleatorio}. Ambas pueden complementarse para completar un proyecto genoma ya que cada uno tiene virtudes y defectos contrapuestos.
+
+\begin{description}
+\item [Caminado]La primera técnica se basa en la existencia de primers. Un \emph{primer} es una secuencia única dentro de una región o fragmento del genoma y sirve para marcar el comienzo del secuenciamiento. El proceso de \emph{caminado} conlleva una continua búsqueda de primers y secuenciación de fragmentos adyacentes ( Ver figura \ref{Figure:Caminado}. Aunque es teóricamente sencilla la tarea es ardua y consume una cantidad muy alta de recursos, además de estar condenada a tiempos imposibles cuando los genomas son medianos o grandes, ya que cada paso puede durar días. Se usa en regiones pequeñas y para resolver un ensamblado\cite{DEO,Roach1998}
+
+\begin{figure}
+{\centering \resizebox*{1\columnwidth}{!}{\includegraphics{Caminado.eps}} \par}
+\caption[Secuenciamiento ordenado.]{\label{Figure:Caminado}Secuenciamiento ordenado. El proceso de caminado se realiza a partir de un \emph{primer} inicial que indica el principio de la región del genoma a secuenciar. Luego se realizar lecturas sucesivas a partir de los nuevos primers que se valla {}``recolectando'' en el camino.}
+\end{figure}
+
+\item [Shotgun]El \emph{secuenciamiento aleatorio}, o \emph{shotgun}, empieza fragmentando una parte, o todo el genoma en un conjunto de piezas al azar de longitudes conocidas. Esto nos permite realizar secuenciamiento en paralelo con lo que se acelera drásticamente el procesamiento ( Ver figura \ref{Figure:Shotgun} ). Aún así el ensamblado termina siendo un proceso más complejo, aunque automatizable. Para resolver los problema de espacios no secuenciados (\emph{GAPs}) o \emph{subsecuenciados}, ver figura \ref{Figure:RegionesSubsecuenciadas}, se asegura que la cantidad de lecturas sobre la región a secuenciar sean suficientes gracias a los estudios estadísticos de Landerman. Si esta estadística no satisface, que es posible, se completa el secuenciamiento con la técnica de caminado. \cite{DEO,Roach1998}.
+
+\begin{figure}
+{\centering \resizebox*{10cm}{!}{\includegraphics{Shotgun.eps}} \par}
+\caption[Secuenciamiento aleatorio.]{\label{Figure:Shotgun}Secuenciamiento aleatorio. Los procesos de secuenciamiento \emph{shotgun} fragmentan el genoma de manera aleatoria, para luego leer todos los fragmentos para ensamblarlos. Si la técnica fragmenta todo el genoma aleatoriamente se la conoce como \emph{Whole Genome Shotgun}, WGS. En caso de que la fragmentación sea por cromosoma se lo conoce como \emph{Whole Chromosome Shotgun}, WCS. Otras técnicas fragmentan el cromosoma a partir de marcas, \emph{BAC ends}, que luego se usan para ordenar los fragmentos una vez que se ensamblen a partir de un secuenciamiento aleatorio. Esta estrategia se la conoce como 'Map-as-you-go'.}
+\end{figure}
+
+\begin{figure}
+{\centering \resizebox*{1\columnwidth}{!}{\includegraphics{RegionesSubsecuenciadas.eps}} \par}
+\caption[Esquema de regiones subsecuenciadas.]{\label{Figure:RegionesSubsecuenciadas}Esquema de regiones subsecuenciadas. En este gráfico se presenta una región que fue secuenciada de forma aleatoria. Los fragmentos superiores fueron secuenciados de 5' a 3', mientras que los inferiores fueron secuenciados de 5' a 3', su complementario. Se describe en la figura dos regiones, una que tiene un espacio no secuenciado (GAP) y otro subsecuenciado al cual falta secuenciar la hebra complementaria (Hebra simple).}
+\end{figure}
+
+\end{description}
+
+\label{Cobertura}El número en promedio en que un nucleótido esta representado por una base de alta calidad en una colección de secuencias obtenidas aleatoriamente se lo conoce como \emph{cobertura}. En otras palabras, la cobertura es la relación entre la cantidad de nucleótidos que debemos leer y la cantidad de nucleótidos que compone nuestro fragmento a secuenciar ( Ver figura \ref{Figure:Cobertura} ). Una simple fórmula descripta en \cite{Lander88}, puede estimar la cobertura necesaria para secuenciar aleatoriamente una parte del genoma para prevenir los problemas del ensamblado. El cuadro \ref{tab: Cobertura} muestra valores usados para aproximar la cobertura. Por ejemplo si se obtiene 100.000 \emph{pares de bases} (pb) de un clon de 100 Kpb, se espera haber secuenciado el 63\% del clon, ya que 100.000 es una ves (1x) la cantidad de pb del clon. Por lo tanto es muy común ver que la mayoria de los genomas son secuenciados bajo una cobertura de entre 8x y 10x.
+
+\begin{figure}
+{\centering \resizebox*{1\columnwidth}{!}{\includegraphics{Cobertura.eps}} \par}
+\caption[Esquema de cobertura.]{\label{Figure:Cobertura}Esquema de cobertura. En la figura se representa un región del genoma que fue secuenciada aleatoriamente. El gráfico inferior describe, nucleótido a nucleótido, la cobertura correspondiente. La cobertura media es de $2.2x$.}
+\end{figure}
+
+\begin{table}
+\begin{tabular}{|c|c|}
+\hline
+Cobertura&Porcentaje del clon secuenciado\\
+\hline
+\hline
+0,25x&22\%\\
+\hline
+0,50x&39\%\\
+\hline
+0,75x&53\%\\
+\hline
+1x&63\%\\
+\hline
+2x&88\%\\
+\hline
+3x&95\%\\
+\hline
+4x&98\%\\
+\hline
+5x&99,4\%\\
+\hline
+6x&99,75\%\\
+\hline
+7x&99,91\%\\
+\hline
+8x&99,97\%\\
+\hline
+9x&99,99\%\\
+\hline
+10x&99,995\%\\
+\hline
+\end{tabular}
+\vspace{.5cm}
+
+\caption{\label{tab: Cobertura}Relación entre la cobertura y el porcentaje
+del clon secuenciado.}
+\end{table}
+
+\section{\label{repeticiones}Secuencias repetidas}
+
+En \cite{MGA} se describe la organización del genoma en dos tipos de elementos, \emph{genes de copia única} y \emph{DNA repetitivo}. Este último a su vez organizado en diferentes subclases, ver figura \ref{Figure:Repeticiones}. 
+
+\begin{figure}
+{\centering \resizebox*{1\columnwidth}{!}{\includegraphics{Repeticiones.eps}} \par}
+\caption[Organización de las moléculas de ADN eucariota.]{\label{Figure:Repeticiones}Organización de las moléculas de ADN eucariota. (ver \cite{MGA})}
+\end{figure}
+
+\begin{description}
+\item [Repeticiones~funcionales]Algunas funciones genéticas se presentan en múltiples copias. Todas ellas pertenecen a alguna de estas clases.
+\begin{description}
+\item [Familia~de~genes~dispersos]Muchas genes que codifican en proteínas se agrupan en familias por homología. Genes de una misma familia pueden tener leves diferencias aún cumpliendo la misma función. Aunque existen casos en que las funciones pueden diferir.
+\item [Arreglos~de~familia~de~genes~en~tándem]Una manera de satisfacer las necesidades de la célula de gran cantidad de productos de algunos genes es organizar los mismos en tándem. O sea, múltiples copias adyacentes de un mismo gen.
+\item [Secuencias~que~no~codifican]Los telómeros son una región del genoma que contiene secuencias que no codifican, no obstante estas regiones son de vital importancia para la estabilidad del cromosoma. Estos se componen de una gran cantidad de copias de secuencias muy cortas de DNA organizadas en tándem.
+\end{description}
+\item [Repeticiones~sin~función~conocida]Las repeticiones que no tengan funcionamiento conocido se las organizan de la siguiente manera.
+\begin{description}
+\item [DNA~altamente~repetitivo~del~centrómero]Se puede encontrar una gran cantidad de repeticiones, organizados en tándem, que flaquean el centrómero de los cromosomas.
+\item [VNTR]Son una clase especial de repeticiones en tándem de entre 15 y 100 nucleótidos. Se encuentran dispersos por todo el genoma.
+\item [Transposones]Una gran proporción del genoma eucariota están compuestos de elementos que son capaces de propagarse. A través de un proceso de copia estas secuencias llamadas transposones puede reubicarse en otras regiones. Si las secuencias que se insertan en el genoma provienen de un RNA, se los conoce como retrotransposones.
+\end{description}
+\end{description}
+
+A partir de esta descripción de las repeticiones podemos llegar a caracterizar atributos comunes a las repeticiones: largo, cantidad, conservación y dispersión. El \emph{largo} y la \emph{cantidad} son atributos triviales, y no así el resto que pasaremos a detallar.
+
+\begin{description}
+\item [Conservación]Las copias pueden variar levemente entre ellas. Las diferencias son las que determina el \emph{grado de conservación}. Este atributo puede variar dentro de la secuencia de manera tal de identificar regiones con menos cambios que otras. Se puede ver esta complejidad en la estructura en familias de genes, como es el caso de VIPER ( Ver figura \ref{Figure:Viper} ) en el \emph{T. cruzi} o la familia de genes que codifican la hemoglobina en el humano ( Ver figura \ref{Figure:Hemoglobina} ). En cambio las VNTRs son muy conservadas.
+
+\begin{figure}
+{\centering \resizebox*{1\columnwidth}{!}{\includegraphics{Viper.eps}} \par}
+\caption[Organización de VIPER.]{\label{Figure:Viper}Organización de VIPER, retroelemento relacionado con retrotransposones LTR, ver \cite{Vazquez2000}.}
+\end{figure}
+
+\begin{figure}
+{\centering \resizebox*{6cm}{!}{\includegraphics{Hemoglobina.eps}} \par}
+\caption[Organización de la hemoglobina.]{\label{Figure:Hemoglobina}Evoluci\'{o}n de la familia de genes de la hemoglobina en el genoma humano.}
+\end{figure}
+
+\item [Dispersión]Indica como se distribuyen las copias en el genoma. Puede ser \emph{local} a una región bien definida, como es el caso de las repeticiones centroméricas o teloméricas. Como también se las puede encontrar \emph{dispersas} como los transposones.
+
+\end{description}
+
+\section{\label{Previas}Previas.}
+
+Antes de comenzar a describir más el problema, es necesario realizar varias aclaraciones sobre la notación usada en el texto. En principio los términos \emph{símbolo}, \emph{letra} y \emph{carácter} se entenderán como sinónimos, refiriéndose a la entidad mínima de lo que están compuesto las secuencias. Así también se verán intercalados los términos \emph{secuencia, palabra} y \emph{cadena} para referencia a una sucesión ordenada de esta entidad mínima. En cambio, \emph{fragmento} y \emph{subsecuencia} son conceptos diferentes. Un fragmento, como se ha dicho, es una secuencia de DNA o proteína que ha sido obtenido por métodos de clonación o cortando una secuencia mayor. A diferencia de fragmento, subsecuencia es una referencia a una región de una secuencia. La misma no tiene sentido si no hay una secuencia que la contenga.
+
+Desde el punto de vista biológico un elemento repetido es una clase de fragmentos homólogos dentro de un mismo genoma. Pero la definición de \emph{repetición} en una \emph{cadena de símbolos} no es tan amplia ya que se toma el concepto de igualdad estructural y no de homología para identificarlas. En consecuencia se usa el concepto de similaridad, que aunque es una aproximación a la homología da excelentes resultados.
+

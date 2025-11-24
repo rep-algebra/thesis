@@ -1,0 +1,382 @@
+\chapter{\label{Modelo}Repeticiones en un conjunto de secuencias dependientes}
+
+\section{\label{Repeticiones en un modelos de secuenciamiento aleatorio}Repeticiones en un modelo de secuenciamiento aleatorio}
+
+Como hemos planteado, nuestra preocupación es obtener secuencias repetidas en técnicas de secuenciamiento shotgun, y de la misma ha surgido las siguiente incógnita:
+
+Si estamos obteniendo secuencias aleatoriamente, podemos concluir que podemos secuenciar varias veces la misma región, es más, se espera tener secuenciado al menos \( c \)x todos las bases del genoma al termino del secuenciamiento \ref{Cobertura}. A la vez las secuencias repetidas tienen más de una copia dentro del genoma. Entonces ¿Cómo saber si una secuencia es repetida o es un fragmento varias veces secuenciado? ¿Qué ocurre con las repeticiones cuando tenemos en cuenta que estamos en un proceso donde se va obteniendo nuevas secuencias durante todo el proceso?
+
+Una secuencia esta repetida si se puede reconocer entre los fragmentos más de \( 2 c \) copias de una repetición. Se puede ser más específico y decir que, si la cantidad de copias encontradas es de \( 2 n \), entonces deben existir al menos \( \frac{n}{c} \) copias en el genoma. Esta aproximación ingenua asegura detectar todas las repeticiones al final del secuenciamiento, ya que si se encuentra una repetición en un fragmento, este no salta a la vista hasta tener la cobertura $c$x en el mismo.
+
+\section{\label{Algebra de Repeticiones}Álgebra de repeticiones.}
+
+Para describir y demostrar la corrección del algoritmo que presentaremos debemos introducir nuevas nociones sobre repeticiones que nos serán muy útiles. En su conjunto planteará una sencilla y nueva álgebra basada en expresiones regulares y en conjuntos finitos, para luego deducir propiedades sobre repeticiones.
+
+Partiendo del modelo propuesto por Gusfield junto con la generalización propuesta para buscar repeticiones en un conjunto de secuencias {[}\ref{MGG}{]}, se plantean las siguientes definiciones sobre el conjunto de secuencias \( S \) correspondientes a un alfabeto , donde cada secuencia se identifica unívocamente por un número entero \( \tau \), y \( S_{\tau } \) es la secuencia. Siendo \( S_{10} \) la secuencia identificada con el número \( 10 \). Una subsecuencia de \( S_{i} \) que comience en la posición \( \pi \) y termine en \( \sigma \) la indicaremos como \( S_{i}(\pi ,\sigma ) \). Por ejemplo, si la secuencia \( axfggh \) esta identificada con el número \( 10 \), entonces \( S_{10}(2,5)=xfg \). Si \( \pi \) es mayor o igual a \( \sigma \), \( S_{i}(\pi ,\sigma ) \) da la secuencia vacía; de igual manera si \( \pi \) o \( \sigma \) están fuera del rango de la secuencia \( S_{i} \).
+
+\begin{defn}
+La tupla de subsecuencias \( \left\langle i,\pi ,\sigma \right\rangle _{S} \) identifica a la subsecuencia de la secuencia \( i \), que pertenece al conjunto \( S \), que comienza en la posición \( \pi \) y termina en la posición \( \sigma \).
+
+Una \emph{consulta} sobre una colección de secuencias \( S \) es un conjunto \( Q_{S} \) de tuplas de subsecuencias. Si para toda tupla de la consulta \( Q_{S} \) existe una secuencias \( \alpha \) que le corresponde la tuplas \( \left\langle i,\pi ,\sigma \right\rangle _{S} \) tal que \( S_{i}(\pi ,\sigma )=\alpha \) diremos que la \emph{consulta es válida} para el conjunto \( S \). Para extender nuestra definición de consulta diremos que \( Q_{S}(\alpha ) \) es el subconjunto de tuplas \( \left\langle i,\pi ,\sigma \right\rangle _{S} \) de \( Q_{S} \) que corresponde a \( S_{i}(\pi ,\sigma )=\alpha \). El largo de la cadena \( \alpha \) la notaremos como \( |\alpha | \).
+\end{defn}
+
+Nuestro objetivo es conseguir un \( Q_{S} \) que contenga solo las secuencias supermaximales de \( S \). En otras palabras pedimos que para cada tupla \( \left\langle i,\pi ,\sigma \right\rangle \in Q_{S}(\alpha ) \), consulta válida de \( S \), exista una tupla maximal \( <j,j',p,p',|\alpha |>\in R\prime (\alpha ) \) tal que \( j=i \) y \( p=\pi \), ó \( j'=i \) y \( p'=\pi \).
+
+Toda esta teoría supone que este dado de antemano un alfabeto \( \Delta \) al que pertenece todas las palabras del conjunto \( S \). Para simplificar la notación, a partir de ahora supondremos estar hablando de un único conjunto \( S \), con lo que no se pondrá los subíndices que indican el conjunto, excepto que se indique lo contrario.
+
+\begin{defn}
+Si el conjunto \( A \) tiene más de \( c \) elementos entonces \( \Phi _{c}A=A \), sino \( \Phi _{c}A=\emptyset \). Esta función \( \Phi _{c} \) la conoceremos como la función \emph{c-repetición} sobre conjuntos.
+
+\begin{eqnarray*}
+\Phi _{c}S & = & S,\#S>c\\
+\Phi _{c}S & = & \emptyset ,\#S\leq c
+\end{eqnarray*}
+
+\end{defn}
+
+La función \( \Phi _{c} \) nos permitirá descartar los conjuntos de secuencias que no correspondan a repeticiones. Llamaremos a \( c \) el \emph{grado de repetición de la consulta} cuando el conjunto sea una consulta. También simplificaremos la notación y no escribiremos el umbral \( c \) mientras no sea necesario, ya que siempre trabajaremos con un umbral fijo.
+
+
+\subsection{Álgebra de repeticiones.}
+
+Para comenzar con las definiciones, primero vamos a definir el conjunto de repeticiones sobre una secuencia y sobre una expresión regular.
+
+\begin{defn}
+Un conjunto de repeticiones \( \left( \alpha \right) \) es un conjunto de tuplas \( \left\langle i,\pi ,\sigma \right\rangle \) ( consulta ) donde \( S_{i}\left( \pi ,\sigma \right) =\alpha \) cuando existe más de una tupla, y es vació si existe una o ninguna tupla.
+
+\begin{equation}
+\label{math:rep-seq}
+\left( \alpha \right) ^{c}_{S}=\Phi _{c}\left\{ \left\langle i,\pi ,\sigma \right\rangle _{S}\left| S_{i}\left( \pi ,\sigma \right) =\alpha \right. \right\} =\Phi _{c}Q_{S}\left( \alpha \right)
+\end{equation}
+
+\end{defn}
+
+Como ejemplo tenemos el conjunto \( S \) de secuencias \( \{tacgua, \) \( agata, \) \( gatca\} \). La consulta \( (ga) \) esta conformado por \( \{\left\langle 2,2,3\right\rangle , \)\( \left\langle 3,1,2\right\rangle \} \) si tomamos las identificación de la secuencia empezando por \( 1 \). Ahora si tomamos la consulta \( (gu) \) es vacía ya que aunque existe la tupla \( \left\langle 1,3,4\right\rangle \), es única por ende \( gu \) no es repetición. Una consulta importante, pero trivial, es la correspondiente a la secuencia vacía \( (\lambda ) \). Esta va a contener un número infinito de tuplas, ya que, como hemos descripto la tuplas cuyos \( \pi \) y \( \sigma \) que estén fuera de rango de la secuencia, o \( \pi \) menor a \( \sigma \), describen a la secuencia vacía.
+
+Ahora daremos más potencia a este conjunto de secuencias para no solo consultar sobre una secuencia sino que también sobre expresiones regulares \footnote{Las expresiones regulares las vamos a expresar entre barras '/ ' para diferenciarlas de las cadenas del lenguaje. }. Este tipo de consulta da mayor potencia ya que se puede expresar un conjunto de consultas de secuencias que cumplan con la expresión.
+
+\begin{defn}
+Un conjunto de repeticiones \( \left( \left/ \beta \right/ \right) \) es una consulta cuyas tuplas \( \left\langle i,\pi ,\sigma \right\rangle \) corresponde a una secuencia repetida que cumple con la expresión regular \( \left/ \beta \right/ \) \footnote{\( S_{i}(\pi ,\sigma )\in /\beta / \) }
+
+\begin{equation}
+\label{math:rep-exp}
+\left( \left/ \beta \right/ \right) ^{c}_{S}=\left\{ \left\langle i,\pi ,\sigma \right\rangle _{S}\in \left( S_{i}\left( \pi ,\sigma \right) \right) ^{c}_{S}\left| S_{i}\left( \pi ,\sigma \right) \in \left/ \beta \right/ \right. \right\}
+\end{equation}
+
+\end{defn}
+
+Tomando el ejemplo anterior, la consulta \( \left( \left/ t.*a\right/ \right) \) esta compuesta por las tuplas \( \{\left\langle 1,1,2\right\rangle , \) \( \left\langle 2,4,5\right\rangle \} \), ya que la única repetición que cumple con la expresión regular es \( ta \). Una consulta más interesante es \( \left( \left/ .*\right/ \right) \) que contiene las tuplas \( \{\left\langle 1,1,2\right\rangle , \) \( \left\langle 2,4,5\right\rangle , \) \( \left\langle 2,2,3\right\rangle , \) \( \left\langle 3,1,2\right\rangle , \) \( \left\langle 2,2,4\right\rangle , \) \( \left\langle 3,1,3\right\rangle \} \) \( \bigcup \) \( \left( \lambda \right) \) de las repeticiones \( ta \), \( ga \), \( gat \) y la secuencia vacío. Notar que si hubiera otra repetición en el conjunto entonces sus tuplas estarían en este conjunto. Otra consulta interesante es aquella que no incorpora la secuencia vacía: \( \left( \left/ .+\right/ \right) \).
+
+Para relacionar ambas definiciones damos el siguiente corolario:
+
+\begin{cor}
+\label{corollary:rep-seq-exp}Un conjunto de repeticiones sobre expresiones regulares verifica la siguiente igualdad:
+
+\begin{equation}
+\label{math:rep-seq-exp}
+\left( \left/ \beta \right/ \right) ^{c}_{S}=\bigcup _{\alpha \in \left/ \beta \right/ }\left( \alpha \right) ^{c}_{S}
+\end{equation}
+
+\end{cor}
+
+\begin{proof}
+La nueva expresión de \( \left( \left/ \beta \right/ \right) \) es otra forma para describir la expresión {[}\ref{math:rep-exp}{]}.
+\end{proof}
+
+\begin{defn}
+La operación \emph{extensión} (\( \cdot \)) sobre consultas válidas da una nueva consulta válida cuyas secuencias son repetidas y extensiones de la consulta original. La extensión se realiza a la derecha si el operador se encuentra a la derecha de la notación, o a la izquierda en otro caso.
+
+\begin{eqnarray}
+\left( \alpha \right) ^{c}_{S}\cdot & = & \bigcup _{\alpha \in \Delta }\left( \alpha a\right) ^{c}_{S}\label{math:ext} \\
+\cdot \left( \alpha \right) ^{c}_{S} & = & \bigcup _{\alpha \in \Delta }\left( a\alpha \right) ^{c}_{S}
+\end{eqnarray}
+
+\end{defn}
+
+\begin{cor}
+Realizar una extensión a derecha (izquierda) a una consulta de una expresión regular \( \beta \) equivale a una consulta de expresión regular \( \beta \cdot \) (\( \cdot \beta \)).
+
+\begin{eqnarray}
+\left( \left/ \beta \right/ \right) ^{c}_{S}\cdot & = & \left( \left/ \beta \cdot \right/ \right) ^{c}_{S}\label{math:exp-reg} \\
+\cdot \left( \left/ \beta \right/ \right) ^{c}_{S} & = & \left( \left/ \cdot \beta \right/ \right) ^{c}_{S}
+\end{eqnarray}
+
+\end{cor}
+
+\begin{proof}
+Comenzando por la expresión definición \ref{math:ext}, y usando el corolario \ref{corollary:rep-seq-exp}, podemos demostrar la igualdad.
+
+\begin{eqnarray*}
+\left( \left/ \beta \right/ \right) _{S}^{c}\cdot & = & \bigcup _{\alpha \in \left/ \beta \right/ }\left( \alpha \right) ^{c}_{S}\cdot \\
+ & = & \bigcup _{\alpha \in \left/ \beta \right/ }\left( \bigcup _{a\in \Delta }\left( \alpha a\right) ^{c}_{S}\right) \\
+ & = & \bigcup _{\alpha \in \left/ \beta .\right/ }\left( \alpha \right) ^{c}_{S}\\
+ & = & \left( \left/ \beta .\right/ \right) ^{c}_{S}
+\end{eqnarray*}
+
+\end{proof}
+
+Gracias a estos dos operadores podemos presentar dos nuevos conjuntos que nos ayudaran con una definición alternativa de repeticiones maximales, y además de ser el pilar del algoritmo propuesto. Las siguientes definiciones son válidas tanto para secuencias como para expresiones regulares ya que se basan en los conceptos definidos previamente.
+
+\begin{defn}
+Una \emph{consulta extensible} a la derecha (izquierda) es una consulta cuyas tuplas están extendidas a la derecha (izquierda) en la extensión de la consulta.
+
+\begin{eqnarray}
+\left( \alpha \right\rangle ^{c}_{S} & = & \Phi ^{c}\left\{ \left\langle i,\pi ,\sigma \right\rangle _{S}\in \left( \alpha \right) ^{c}_{S}\left| \left\langle i,\pi ,\sigma +1\right\rangle _{S}\in \left( \alpha \right) ^{c}_{S}\cdot \right. \right\} \label{math:rep-expansible} \\
+\left\langle \alpha \right) ^{c}_{S} & = & \Phi ^{c}\left\{ \left\langle i,\pi ,\sigma \right\rangle _{S}\in \left( \alpha \right) ^{c}_{S}\left| \left\langle i,\pi -1,\sigma \right\rangle _{S}\in \cdot \left( \alpha \right) ^{c}_{S}\right. \right\}
+\end{eqnarray}
+
+Una \emph{consulta no extensible} a la derecha \emph{}(izquierda) es una consulta cuyas tuplas no están extendidas a la derecha (izquierda) en la extensión de la consulta.
+
+\begin{eqnarray}
+\left( \alpha \right] ^{c}_{S} & = & \Phi ^{c}\left\{ \left\langle i,\pi ,\sigma \right\rangle _{S}\in \left( \alpha \right) ^{c}_{S}\left| \left\langle i,\pi ,\sigma +1\right\rangle _{S}\notin \left( \alpha \right) ^{c}_{S}\cdot \right. \right\} \label{math:rep-noexpansible} \\
+\left[ \alpha \right) ^{c}_{S} & = & \Phi ^{c}\left\{ \left\langle i,\pi ,\sigma \right\rangle _{S}\in \left( \alpha \right) ^{c}_{S}\left| \left\langle i,\pi -1,\sigma \right\rangle _{S}\notin \cdot \left( \alpha \right) ^{c}_{S}\right. \right\}
+\end{eqnarray}
+
+Una consulta cuyas tuplas estén en una consulta (no) extensible a derecha y en una consulta (no) extensible a la izquierda la denominamos \emph{consulta completamente (no) extensible}.
+
+\begin{eqnarray}
+\left\langle \alpha \right\rangle _{S}^{c} & = & \left\langle \alpha \right) _{S}^{c}\cap \left( \alpha \right\rangle _{S}^{c}\label{math:rep-completeexpansible} \\
+\left[ \alpha \right] _{S}^{c} & = & \left[ \alpha \right) _{S}^{c}\cap \left( \alpha \right] _{S}^{c}
+\end{eqnarray}
+
+\end{defn}
+
+Por ejemplo, tomando el conjunto de secuencias \[ S=\left\{ vaac,waabaab,vaacaaq\right\} \] cuya consulta \( \left( aa\right) \) contiene a los siguientes pares. \[ \{\left\langle 1,2,3\right\rangle , \left\langle 2,2,3\right\rangle , \left\langle 2,5,6\right\rangle , \left\langle 3,2,3\right\rangle , \left\langle 3,5,6\right\rangle \} \]Si expandimos a derecha \( \left( aa\right) \) tenemos que calcular primero las siguientes consultas \( \left( aac\right) \)\( = \)\( \{\left\langle 1,2,4\right\rangle , \) \( \left\langle 3,2,4\right\rangle \} \), \( \left( aab\right) = \)\( \{\left\langle 2,2,4\right\rangle , \) \( \left\langle 2,5,7\right\rangle \} \) y \( \left( aaq\right) = \) \( \emptyset \), calculando así la expansión \( \left( aa\right) \cdot = \) \( \{\left\langle 1,2,4\right\rangle , \) \( \left\langle 2,2,4\right\rangle , \) \( \left\langle 2,5,7\right\rangle , \) \( \left\langle 3,2,4\right\rangle \} \). A partir de ahí podemos calcular las siguientes consultas: \( \left( aa\right\rangle = \) \( \{\left\langle 1,2,3\right\rangle , \) \( \left\langle 2,2,3\right\rangle , \) \( \left\langle 2,5,6\right\rangle , \) \( \left\langle 3,2,3\right\rangle \} \) y \( \left( aa\right] = \) \( \emptyset \). Expandiendo ahora a izquierda tenemos \( \cdot \left( aa\right) = \) \( \{\left\langle 1,1,3\right\rangle , \) \( \left\langle 3,1,3\right\rangle \} \) junto con las consultas \( \left\langle aa\right) = \) \( \{\left\langle 1,2,3\right\rangle , \) \( \left\langle 3,2,3\right\rangle \} \) y \( \left[ aa\right) = \) \( \{\left\langle 2,2,3\right\rangle , \) \( \left\langle 2,5,6\right\rangle , \) \( \left\langle 3,5,6\right\rangle \} \). Podemos ver ahora las consultas \( \left[ aa\right] = \) \( \emptyset \) y \( \left\langle aa\right\rangle = \) \( \{\left\langle 1,2,3\right\rangle , \) \( \left\langle 3,2,3\right\rangle \} \). Aquí podemos ver que secuencia \( aa \) puede expandirse más a ambos lados.
+
+Para introducir a una propiedad, calcularemos rápidamente \( \left[ vaac\right] \) y \( \left[ aab\right] \) en la figuras \ref{Calculo: vaac} y \ref{Calculo: aab} respectivamente.
+
+\begin{figure}
+
+\begin{eqnarray*}
+\left( vaac\right) & = & \left\{ \left\langle 1,1,4\right\rangle ,\left\langle 3,1,4\right\rangle \right\} \\
+\left( vaac\right) \cdot & = & \emptyset \\
+\cdot \left( vaac\right) & = & \emptyset \\
+\left( vaac\right\rangle & = & \emptyset \\
+\left( vaac\right] & = & \left\{ \left\langle 1,1,4\right\rangle ,\left\langle 3,1,4\right\rangle \right\} \\
+\left\langle vaac\right) & = & \emptyset \\
+\left[ vaac\right) & = & \left\{ \left\langle 1,1,4\right\rangle ,\left\langle 3,1,4\right\rangle \right\} \\
+\left\langle vaac\right\rangle & = & \emptyset \\
+\left[ vaac\right] & = & \left\{ \left\langle 1,1,4\right\rangle ,\left\langle 3,1,4\right\rangle \right\}
+\end{eqnarray*}
+
+\caption{\label{Calculo: vaac}Cálculo de la repetición supermaximal \protect\( vaac\protect \)
+para el conjunto \protect\( S=\left\{ vaac,waabaab,vaacaaq\right\} \protect \).}
+
+\end{figure}
+
+\begin{figure}
+
+\begin{eqnarray*}
+\left( aab\right) & = & \left\{ \left\langle 2,2,4\right\rangle ,\left\langle 2,5,7\right\rangle \right\} \\
+\left( aab\right) \cdot & = & \emptyset \\
+\cdot \left( aab\right) & = & \emptyset \\
+\left( aab\right\rangle & = & \emptyset \\
+\left( aab\right] & = & \left\{ \left\langle 2,2,4\right\rangle ,\left\langle 2,5,7\right\rangle \right\} \\
+\left\langle aab\right) & = & \emptyset \\
+\left[ aab\right) & = & \left\{ \left\langle 2,2,4\right\rangle ,\left\langle 2,5,7\right\rangle \right\} \\
+\left\langle aab\right\rangle & = & \emptyset \\
+\left[ aab\right] & = & \left\{ \left\langle 2,2,4\right\rangle ,\left\langle 2,5,7\right\rangle \right\}
+\end{eqnarray*}
+
+\caption{\label{Calculo: aab}Cálculo de la repetición supermaximal \protect\( aab\protect \)
+para el conjunto \protect\( S=\left\{ vaac,waabaab,vaacaaq\right\} \protect \).}
+
+\end{figure}
+
+Las repeticiones \( vaac \) y \textbf{\( aab \)} cuyas consultas son completamente no extensibles son las únicas para éste conjunto \( S \). Lo importante es ver que éstas son repeticiones supermaximales del conjunto \( S \). Más adelante demostraremos que la consulta de todas las secuencias completamente no extensibles da las tuplas correspondiente a las repeticiones supermaximales de un mismo conjunto de secuencias.
+
+A continuación presentamos unas propiedades de estos conjuntos.
+
+\begin{cor}
+La intersección entre una consulta extensible a izquierda (derecha) y una consulta no extensible hacia la izquierda (derecha) es vacía.
+
+\begin{eqnarray*}
+\left\langle \alpha \right) \cap \left[ \alpha \right) & = & \emptyset \\
+\left( \alpha \right\rangle \cap \left( \alpha \right] & = & \emptyset
+\end{eqnarray*}
+
+\end{cor}
+
+\begin{proof}
+Como una tupla no puede pertenecer a una consulta extensible y a una consulta no extensible a la vez, la intersección es vacía.
+\end{proof}
+
+\begin{cor}
+La extensión a derecha (izquierda) de una consulta no es extensible a derecha (izquierda) es vacía.
+
+\begin{eqnarray*}
+\left( \alpha \right] \cdot & = & \emptyset \\
+\cdot \left[ \alpha \right) & = & \emptyset
+\end{eqnarray*}
+
+\end{cor}
+
+\begin{proof}
+La consulta no extensible a derecha (izquierda) por definición es el conjunto de los elementos que no pertenecen a la extensión a derecha (izquierda) de \( \left( \alpha \right) \), entonces la consulta es vacía.
+\end{proof}
+
+\begin{cor}
+La extensión de una consulta extensible a izquierda equivale a la extensión a izquierda de la consulta.
+\begin{eqnarray*}
+\left( \alpha \right\rangle \cdot & = & \left( \alpha \right) \cdot \\
+\cdot \left\langle \alpha \right) & = & \cdot \left( \alpha \right)
+\end{eqnarray*}
+
+\end{cor}
+
+\begin{proof}
+Como la consulta extendida modifica aquellas tuplas que pueden ser extendidas, la consulta extendida equivale a la consulta extensible extendida.
+\end{proof}
+
+La próxima consulta es de gran importancia ya que nos define lo que
+es un conjunto de secuencias supermaximales.
+
+\begin{cor}
+La consulta que contenga a todas las tuplas que correspondan a secuencias
+supermaximales para un conjunto \( S \) es igual a \( [/\cdot */] \).
+\end{cor}
+
+\begin{proof}
+Tomemos un par maximal \( \left\langle i,i',\pi ,\pi ',|\alpha |\right\rangle \in R(S) \) que corresponda a una repetición supermaximal \( \alpha \in R'(S) \). En primera instancia \( \alpha \) pertenece a la expresión regular \( \left/ \cdot *\right/ \). Por lo tanto las tuplas \( \left\langle i,\pi ,\pi +|\alpha |\right\rangle \) y \( \left\langle i',\pi ',\pi '+|\alpha |\right\rangle \) pertenecen a la consulta \( \left( \left/ \cdot *\right/ \right) \). Ahora por ser \( \alpha \) una repetición supermaximal no se le puede colocar un símbolo a izquierda o a derecha sin que \( \alpha \) deje de ser repetición, por lo tanto las tuplas deben pertenecerá también a \( \left[ \left/ \cdot *\right/ \right] \). Hasta aquí demostramos que todos pares maximales pueden escribirse en tuplas en consultas y que estas pertenecen a la consulta no expansible \( \left[ \left/ \cdot *\right/ \right] \).
+
+Ahora tememos una tupla \( \left\langle i,\pi ,\pi +|\alpha |\right\rangle \) cualquiera de la consulta \( \left[ \left/ \cdot *\right/ \right] \) correspondiente a la subsecuencia \( \alpha \). Por definición de una consulta por expresión regular sabemos que \( \left[ \alpha \right] \subseteq \left[ \left/ \cdot *\right/ \right] \) , con lo que sin perder generalidad, podemos trabajamos con \( \left[ \alpha \right] \) en vez de \( \left[ \left/ \cdot *\right/ \right] \). Justamente \( \left\langle i,\pi ,\pi +|\alpha |\right\rangle \in \left[ \alpha \right] \). Esto significa que la tupla se repite más de una vez en \( S \), por lo que existe otra tupla distinta \( \left\langle i',\pi ',\pi '+|\alpha |\right\rangle \in \left[ \alpha \right] \), sino \( \left[ \alpha \right] \) sería una consulta vacía. A partir de estas dos tuplas podemos construir el par maximal \( \left\langle i,i',\pi ,\pi ',|\alpha |\right\rangle \). Podemos decir esto ya que si \( \left[ \alpha \right] \) no es vacía entonces \( \alpha \) no puede expandirse ni a izquierda ni a derecha sin dejar de ser repetición, por lo que podemos decir que \( \alpha \) es una secuencia maximal, por lo tanto \( \left\langle i,i',\pi ,\pi ',|\alpha |\right\rangle \) es un par maximal. Ahora, si existiera una consulta \( \left[ \omega \alpha \delta \right] \) , con \( \omega \alpha \delta \neq \alpha \) y no vacía, entonces la secuencia \( \alpha \) no sería supermaximal. Pero como \( \alpha \) no es extensible \( \omega \alpha \delta \) no es una repetición. Gracias a que generalizamos sobre toda supersecuencia que contenga a \( \alpha \) podemos concluir que no existe una repetición que la contenga, con lo que \( \alpha \) es una repetición supermaximal. Podemos asegurar entonces que el par maximal \( \left\langle i',\pi ',\pi '+|\alpha |\right\rangle \) existe en \( R(S) \).
+\end{proof}
+
+Esta demostración no solo demuestra que conseguir \( \left[ \left/ \cdot *\right/ \right] \) implica conseguir el conjunto de todas las copias de las repeticiones supermaximales, sino que también relaciona el álgebra de repeticiones con las definiciones de Gusfield. Para nuestro algoritmo necesitamos también ver que el conjunto de sufijos de \( \left[ \left/ \cdot *\right/ \right] \) equivale al conjunto de sufijos \( \left( \left/ \cdot *\right/ \right] \), ya que esta es la base de la estructura de base propuesta para resolver el problema: árbol de sufijos de \( \left[ \left/ \cdot *\right/ \right] \).
+
+\begin{cor}
+El conjunto de sufijos de las repeticiones supermaximales de un conjunto \( S \), equivale al conjunto de sufijos de las secuencias representadas por las tuplas de \( \left( \left/ \cdot *\right/ \right] \).
+\end{cor}
+
+\begin{proof}
+Si \( \alpha \) es una repetición maximal entonces \( \left( \alpha \right] \subseteq \left( \left/ \cdot *\right/ \right] \), y \( \left( \alpha \right] \neq \emptyset \). Por lo tanto todo sufijo de \( \alpha \) esta incluido en los sufijos de las secuencias representadas por las tuplas de \( \left( \left/ \cdot *\right/ \right] \). Ahora, sea \( \alpha \) un sufijo de una secuencia representada por las tuplas de \( \left( \left/ \cdot *\right/ \right] \). Hay que demostrar que existe un \( \beta \) tal que \( \beta \alpha \) es una repetición supermaximal. Lo que sí podemos asegurar es que existe un \( \gamma \) tal que \( \left( \gamma \alpha \right] \subseteq \left( \left/ \cdot *\right/ \right] \), \( \left( \gamma \alpha \right] \neq \emptyset \). Es más, existe un \( \gamma \) tal que \( \cdot \left( \gamma \alpha \right] =\emptyset \), con lo que \( \left[ \gamma \alpha \right] \neq \emptyset \). En consecuencia \( \gamma \alpha \) es un supermaximal, en tanto \( \alpha \) es prefijo de un supermaximal.
+\end{proof}
+
+\section{\label{Arbol de Sufijos de Supermaximales}Árbol de Sufijos de Supermaximales: $AS^2$}
+
+Resumiendo, se espera obtener un soporte que pueda almacenar todas secuencias repetidas supermaximales de un conjuntos de secuencias con un grado de repetición dado.
+
+Las siguientes son características del modelo que se deben aprovechar para optimizar la consulta sobre el soporte.
+
+\begin{enumerate}
+\item \label{Constante} La obtención de las secuencias es constante, por lo que es necesario que la inserción de los fragmentos no provoque un cuello de botella en el proceso de secuenciamiento.
+\item \label{Tamaño} El largo de las secuencias no supera un largo \( l \). Se espera no tener más de \( m \) secuencias al final del secuenciamiento shotgun. El tamaño del alfabeto es de \( n \) símbolos.
+\item \label{CharCobertura} Las repeticiones supermaximales son sobre un grado de repetición de \( c \), que es la cobertura para tener el genoma terminado dado por la fórmula de Landerman.
+\item \label{Optimización} La optimización debe centrarse sobre la consulta de repeticiones supermaximales.
+\end{enumerate}
+
+Basándose en estos cuatro hechos, se propone el uso de un árbol de sufijos de las repeticiones maximales de un conjunto \( S \) de secuencias con un grado repetición de \( c \).
+
+Por las características propias de un árbol de sufijos \cite{Gus97} es conveniente para realizar consultas sobre cadenas (cadenas y subcadenas exactas e inexactas) permitiendo cumplir con el requisito \ref{Optimización}. Pero no es obvio que se cumplan con los requisitos \ref{Tamaño} y \ref{CharCobertura}. A continuación presentaremos un algoritmo de inserción que nos permitirá realizar la inserción con una complejidad lineal al largo de la secuencia insertada, que construirá el árbol de sufijos de los elementos repetidos supermaximales de grado de repetición \( c \). El largo máximo de las secuencias y la cantidad de fragmentos leídos al final del secuenciamiento nos permitirá calcular limites sobre el tamaño de la estructura.
+
+El árbol de sufijos supermaximales tienen el siguiente invariante.
+
+\subsection{Invariante}
+
+\begin{enumerate}
+\item Cada camino \( \omega \) del árbol que comience en la raíz representa un sufijo de una repetición supermaximal. Llamaremos \( \overline{\omega } \) a la secuencia que corresponde al camino \( \omega \). Por definición de árbol solo existe un único camino a cada nodo del árbol. Por ello \( \overrightarrow{\eta } \) es el camino entre la raíz y el nodo \( \eta \), y \( \overline{\eta } \) es la secuencia que corresponde al camino \( \overrightarrow{\eta } \).
+\item Cada nodo \( \eta \) del árbol contiene la consulta \( \left( \overline{\eta }\right) -\left( \overline{\eta }\right\rangle \).
+\end{enumerate}
+
+\subsection{Propiedades}
+
+\begin{enumerate}
+\item Las hojas del árbol esta conformadas por \( \left( \overline{\eta }\right) -\emptyset =\left( \overline{\eta }\right] \), ya que si existiera un hijo del nodo significaría que existe un sufijo de un supermaximal que lo continua, entonces \( \left( \overline{\eta }\right\rangle \neq \emptyset \).
+\item Las hojas del árbol cuyas consultas no pueden expandirse a izquierda representan repeticiones supermaximales.
+\item La cantidad de subsecuencias almacenadas será de $m-n$ donde $m$ es la cantidad de símbolos en total de las secuencias almacenadas, y $n$ es la cantidad de secuencias almacenadas.
+\item Si $l$ es el tamaño de la repetición supermaximal más larga, entonces el árbol tiene $l$ niveles, y menos de \( |\Delta| ^ ( l + 1 ) \) nodos.
+\item Todos los nodos tienen como mucho $|\Delta|c$ subsecuencias.
+\item La cantidad de nodos es mayor a $\frac{m - n}{|\Delta|c}$.
+\end{enumerate}
+
+Por ejemplo, la figura \ref{arbol_ejemplo0} muestra el árbol de sufijos
+de supermaximales para el conjunto de secuencias \{CTGAC GTAA, CCCTT GGTAA A,
+TCGTA GTG, CATGC TTGGA\} con un grado de repetición superior a uno.
+Cada rama del árbol representa cada uno de los sufijos de las repeticiones
+supermaximales: CC, CTTGG, CGTA, GA, GTAA.
+
+\begin{figure}
+\caption{\label{arbol_ejemplo0}Árbol de sufijos de supermaximales del conjunto \{ \emph{CTGACGTAA}, \emph{CTGACGTAA}, \emph{TCGTAGTG}, \emph{CATGCTTGGA} \} con un grado de repetición de \protect\( 2\protect \).}
+\end{figure}
+
+\section{\label{Algoritmos}Operaciones.}
+
+\begin{description}
+\item [Insertar]Inserta todos los sufijos supermaximales de una secuencia al árbol. Para ello necesita de las siguientes operaciones auxiliares.
+\begin{description}
+\item [Insertar~sufijo]Inserta en el árbol el sufijo supermaximales que es prefijo de la secuencia de entrada dado por la operación insertar. Para completarse necesita de la operación de \emph{llenar} y \emph{expandir}.
+\item [Llenar]Sea $\alpha$ prefijo de la secuencia de entrada tal que exista en el árbol una hoja $h$ que le corresponda. Inserta en $h$ la subsecuencia correspondiente a $\alpha$. En el caso que no exista una hoja, inserta la subsecuencia correspondiente a $\alpha$ en el nodo correspondiente a la secuencia $\alpha$.
+\item [Expandir]A partir de un nodo $h$ si existen más de $c$ subsecuencias que continúan con el mismo símbolo $s$, se mueven estas subsecuencias al nodo correspondiente a la rama $s$. Si este nuevo nodo tienen más de $c$ subsecuencias que continúan con un mismo símbolo, se aplica la operación expandir nuevamente.
+\end{description}
+\item [Consultar~por~secuencia]A partir de una secuencia, consultar cuantas veces se repite en el conjunto y que secuencias la contienen. También puede indicar si es: \emph{supermaximal}, \emph{prefijo de supermaximal} y \emph{sufijo de supermaximal}.
+\begin{description}
+\item [Todos~los~supermaximales]Devolver los supermaximales almacenados en la base de datos.
+\end{description}
+\end{description}
+
+\subsection{\label{Demostracion}Demostración que las operaciones mantienen el invariante.}
+
+Las operaciones que modifican realmente el árbol son \emph{llenar} y \emph{expandir}, ya que \emph{insertar sufijo} e \emph{insertar} las usan para ingresar las secuencias. Las operaciones de consultas solo recorren el árbol.
+
+\begin{description}
+\item [Llenar]La operación de llenar rompe el invariante del árbol ya que agrega subsecuencias a las hojas sin fijarse si rompen el invariante de mantener menos de $c$ subsecuencias que continúen con el mismo símbolo. La operación \emph{expandir} es quien vuelve válida a la estructura.
+\item [Expandir]Esta función vuelve al árbol a cumplir con el invariante. Cuando \emph{llenar} agrega una nueva subsecuencia $\alpha$ al nodo, puede ocurrir dos cosas:
+\begin{itemize}
+\item Siendo $s$ la secuencia que continua a $\alpha$, la cantidad de secuencias que continúan con el símbolo $s$ no superan el umbral $c$ con lo que el árbol cumple con el invariante. \emph{Expandir} no modifica el árbol. A este caso lo llamaremos \emph{caso base} de la expansión.
+\item Siendo $s$ la secuencia que continua a $\alpha$, la cantidad de secuencias que continúan con el símbolo $s$ supera el umbral $c$ con lo que el árbol no cumple con el invariante. En este caso \emph{expandir} mueve todos las subsecuencias que corresponden a $\alpha$ y continúan con el símbolo $s$ al nodo correspondiente a la rama $s$. Con lo que este nodo, correspondiente a la secuencia $\alpha c$, contiene las subsecuencias del nodo $\alpha$ que se pueden expandir a $\alpha c$. A partir de aquí puede ocurrir nuevamente estos dos casos en este nodo y hay que repetir nuevamente la operación \emph{expandir} hasta que termine en el caso base. A este caso lo llamaremos \emph{caso recursivo} de la expansión.
+\end{itemize}
+\end{description}
+
+Así queda demostrado de que estas operaciones mantienen el árbol dentro del invariante.
+
+\subsection{\label{Ordenes}Ordenes de las operaciones.}
+
+\subsubsection{Orden temporal de la inserción}
+
+La complejidad temporal de dichas operaciones es cuadrático, relacionadas directamente con el tamaño de la secuencia supermaximal más larga y el largo de la secuencia a inserción, siendo la menor de ambas la que tiene más peso. Veamos los cálculos para cada operación por separado
+empezando por la expansión. La implementación en donde están calculados estos tiempos corresponde a nodos con \( n \) listas enlazadas de tuplas, correspondiente a cada uno de los \( n \) símbolos del alfabeto. Tomaremos a \( l \) el largo de la secuencia a ingresar y \( m \) el largo de la secuencia supermaximal más larga.
+
+\begin{itemize}
+\item La expansión debe verificar por cada carácter si es posible expandir con el mismo, para eso hace compara la cantidad de subsecuencias que pueden expandirse con el mismo. La comparación tiene orden constante si se mantiene en la lista un contador de cantidad de elementos que guarda. Por lo tanto se realiza \( n \) comparaciones. Si se expande, solo se expande por una rama ya que si se tiene en cuenta que se insertó una tupla que desestabilizó el nodo - superó el umbral de repeticiones -. La cantidad de tuplas que se van a mover son siempre \( c+1 \), por la misma razón por la que se bajó por el nodo. Como esta operación se puede realizar hasta que no halla más que expandir, osea se terminó la secuencia o no hay repeticiones que superen el umbral, la cantidad de veces que se repite es el largo de la secuencia, \( l \), o el tamaño de la maximal que comience en la posición indicada por la tupla expandida, que su cota será el largo de la secuencia supermaximal más larga, \( m \). Por lo tanto, si sumamos la cantidad de comparaciones y movimientos en cada expansión tenemos \( n+c+1+min(l,m) \) operaciones. Como \( n \), y \( c \) son constantes tenemos una complejidad temporal de \( O(min(l,m)) \).
+\item La inserción en cambio tiene una complejidad cuadrática, ya que por cada secuencia hay que repetir la expansión \( l \) veces. Por lo tanto la complejidad de insertar una secuencia de largo \( l \) es de \( O(l.min(l,m)) \). Refinando, la secuencia en cada expansión es un carácter más corta, con lo que la complejidad se convierte en \( O(\sum ^{l}_{i=1}min(i,m)) \). En el peor de los casos \( m \) va a superior a \( l \) con lo que la complejidad queda acotada a \( \frac{l(l+1)}{2} \) por lo que el orden es cuadrático. En caso contrario el orden queda acotado por \( \frac{m(m+1)}{2}+(l-m)m \).
+\end{itemize}
+
+Esta complejidad esta calculada para cualquier secuencia. ¿Pero cómo debería actuar este algoritmo en un modelo de secuenciamiento aleatorio? En principio todas las secuencias tienen en promedio un mismo largo (700pb), con lo que \( l \) se transforma en una constante. Por lo tanto esta acotado también \( m \) por no poder superar el tamaño de la secuencia más larga del conjunto. Entonces, aunque el algoritmo de inserción tenga un orden cuadrático, tiene que actuar en una complejidad temporal constante.
+
+\subsubsection{Ordenes temporales de las consultas}
+
+Con respecto a la identificación de secuencias supermaximales, se debe recorrer, en primera instancia todos los nodos del árbol hasta encontrar una hoja. Reconocer si la hoja es supermaximal es de orden lineal ya que la cantidad de elementos de un nodo no pude superar \( n.c+s \), donde \( s \) es la cantidad de sufijos de las secuencias que terminan en aquel nodo. Si usamos este método para calcular el orden llegaremos a que es cuadrático, pero si tenemos en cuenta que la cantidad de tuplas que están almacenadas en todo el árbol es de \( l.\left| S\right| \), donde \( \left| S\right| \) es la cantidad de secuencias almacenadas y \( l \) es el largo promedio de todas ellas, y que recorrer todo el árbol es comparar todas las tuplas llegamos a la conclusión de que tiene un orden lineal: \( O(l.\left| S\right| ) \).
+
+En el caso de que queramos verificar si una secuencia $\alpha$ es una repetición, el orden es lineal ya que solo tenemos que bajar por la rama que nos lleve al nodo $n$ correspondiente a $\alpha$, si existe. En caso contrario $\alpha$ no es repetición. \( T( \alpha ~es~repeticion ) = | \alpha | \). 
+
+Además, si queremos obtener todas las secuencias que contienen a $\alpha$ debemos recorrer el subárbol donde el nodo $n$ es su raíz. El tiempo de esta operación esta acotado a \( T( \alpha ~es~repeticion) + | \Delta | ^ { l - | \alpha | } \), ya que hay que recorrer como mucho esa cantidad de nodos para obtener las consultas de las secuencias que la contienen.
+
+Decidir si una subsecuencia que esta una consulta es supermaximal tiene orden constante, ya que esta acotado como mucho por la cantidad de subsecuencias que puede tener una consulta (nodo) que por propiedad vimos que es de \( | \Delta | c \). Primero se verifica que el nodo sea una hoja, sino es expansible a derecha, por lo que no es supermaximal. Luego se cuenta la cantidad de nodos continúan con cada símbolo para la izquierda. Si existe más de $c$ subsecuencias para un mismo símbolo significa que es expansible a izquierda, por lo tanto no es supermaximal. En caso contrario se puede afirmar que es supermaximal para una cobertura de $c$.
+
+\begin{algorithm}
+\caption{Insertar: Inserta los sufijos supermaximales de $S$ al árbol.}
+\label{Algoritmo: Insertar}
+\begin{algorithmic}
+\FORALL {Sufijos $\epsilon$ de $S$}
+\STATE Llegar al nodo $N$ correspondiente a un prefijo $\pi$ de $\epsilon$, tal que $\pi$ es $\epsilon$ o $N$ es una hoja del árbol. ( \emph{Llenar} )
+\STATE Agregar $\pi$ a $N$.
+\IF {$\pi$ no es $\epsilon$}
+\STATE Expandir el nodo $N$ según el símbolo $s$, donde $\pi s$ es prefijo de $\epsilon$.
+\ENDIF
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Expandir: Expande un nodo $N$ según el símbolo $s$.}
+\label{Algoritmo: Expandir}
+\begin{algorithmic}
+\IF{ Cantidad de subsecuencias del nodo $N$ que continúan con el símbolo $s$ es mayor o igual a $c$ }
+\STATE Mover todas las subsecuencias del nodo $N$ que se continúan con el símbolo $s$ al nodo correspondiente al eje $s$.
+\FORALL{ Rama $i$ del nodo $M$ de la rama $s$ }
+\STATE Expandir el nodo $M$ según el símbolo $i$.
+\ENDFOR
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+

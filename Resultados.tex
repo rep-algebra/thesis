@@ -1,0 +1,301 @@
+\chapter{\label{ResultadosConclusiones}Resultados y Conclusiones}
+
+\section{\label{Implementacion}Implementación}
+
+La implementación del $AS^2$ tiene como base un árbol $n$-ário, donde $n$ es el número de símbolos del alfabeto. En nuestro caso son seis símbolos: ".ATCGN". El punto indica el inicio y el fin de la cadena. La ``N'' representa una incógnita en el nucleótido que correspondería a un lugar dado. Cada nodo tiene $n$ listas enlazadas de subsecuencias. Las listas agrupan a las subsecuencias que tienen el símbolo próximo en común. Esto permite calcular la cantidad de elementos que tienen un mismo elemento próximo en orden constante, al igual que mover dichos elementos en la operación de \emph{expandir}.
+Para reducir el espacio que ocupó el árbol se reduce todo nodo intermedio expandido en todas sus ramas. Cualquier subsecuencia que no pueda ser expandida a pesar que un nodo tenga todas sus ramas extendidas, significa que esa subsecuencia es una repetición maximal, pero no supermaximal.
+La estructura se almacena en memoria. Al final el proceso se pierde. Se sabe que puede almacenarse en disco y reusarse, pero se decidió dejar esta parte de la implementación en trabajos futuros.
+El lenguaje usado fue C++, y todos los procesos fueron ejecutados bajo un procesador Athlon de 1Ghz, con 256 Mb de memoria RAM.
+
+\section{\label{Resultados}Resultados}
+
+El objetivo de los experimento es confirmar el orden de temporal y espacial de los algoritmos. Luego observar el comportamiento del algoritmo en casos reales. Para ello fueron seleccionadas cuatro muestras. Las primeras dos muestras corresponden al genoma del \emph{T. cruzi}, las otras dos al genoma del \emph{Plasmodium falciparum}.
+El genoma del \emph{T. cruzi} no se ha terminado de secuenciar por la gran cantidad de repeticiones que contiene, ver \ref{Introduccion}. Se ha seleccionado esta muestra no solo por que esta tesis intenta ser una punto de apoyo para solucionar los problemas de este parásito, sino también porque contiene dos elementos repetitivos complejos bien conocidos como son SIRE y VIPER \cite{Vazquez2000}. Con la muestra VIPER/SIRE se intenta observar el comportamiento de las repeticiones supermaximales con cobertura $c$ con estructuras complejas como son estos dos elementos. Estos elementos fueron clasificados como \emph{retrotransposones}.
+Además, el  \emph{T. cruzi} se esta secuenciando con una técnica de secuenciamiento aleatoria jerárquica. Esta técnica simplifica el ordenamiento fragmentando el genoma en $n$ secciones del 100kb cada una, conocidas como \emph{BAC}s. Luego se secuencian cada BAC con la técnica shotgun. Luego se ensamblan los BACs por separados. Una vez resulto el ensamblado se termina de ordenar los BACs para conseguir un consenso que será el genoma del \emph{T. cruzi}. Ordenar estos BACs se basa en organizar los \emph{BACs ends}, extremos de 500pb de cada BAC. La segunda muestra se compone de las secuencias de estos extremos. Se quiere ver como reacciona el algoritmo a elementos superpuestos, pero que no representan la totalidad del genoma.
+Por último, a partir del genoma del \emph{Plasmodium falciparum}, completado a través de la técnica WCS, se tomaron las siguientes muestras: lecturas de primera pasada del secuenciado aleatorio del cromosoma 2 y consenso del cromosoma 2 generado por el centro de investigación TIGR. Estas dos muestras nos permitirá ver el comportamiento del $AS^2$ en un caso real. Primero simulando la obtención de secuencias supermaximales durante el proceso de secuenciamiento, y segundo observando las secuencias supermaximales desde un genoma completo. Luego se podrá comparar ambos resultados para ver que tan buena es la predicción de repeticiones.
+
+\subsection{Confirmación de los ordenes.}
+
+En todas las muestras se observaron que el tiempo y el espacio de la implementación confirman los órdenes del algoritmo como se ven en las figuras \ref{Figure:tcg.SIRE/VIPER.5x}, \ref{Figure:tcg.SIRE/VIPER.195x}, \ref{Figure:tcg.BACend} y \ref{Figure:pfg}. Aún así, el orden temporal decae exponencialmente cuando el algoritmo usa memoria virtual. Esto nos deja suponer que el orden no empeorará si se usa el disco como soporte principal. Pero es un necesidad realizar un estudio minucioso en el algoritmo y estructura de datos que sera el soporte de la cache de la estructura, ya que el algoritmo usado por el sistema operativo para descargar una página de la memoria principal empeora el orden del algoritmo al punto de tener un comportamiento exponencial.
+
+\subsection{Observaciones extra.}
+
+Más allá de los ordenes calculados, se ha observado un comportamiento lineal en el crecimiento de los nodos del árbol con respecto al crecimiento de los supermaximales, ver figuras  \ref{Figure:tcg.SIRE/VIPER.5x}, \ref{Figure:tcg.SIRE/VIPER.195x}, \ref{Figure:tcg.BACend} y \ref{Figure:pfg}. De la misma manera, y llamativamente, la cantidad de repeticiones supermaximales también tiene un comportamiento aproximadamente lineal con respecto a la cantidad de instancias ingresadas.
+
+\subsection{\emph{Trypanosoma cruzi}}
+
+\subsubsection{VIPER y SIRE}
+\begin{description}
+\item [Origen~de~las~secuencias]Entrez. Secuencias \emph{T. cruzi} relacionadas con VIPER y SIRE. Búsqueda en Entrez:
+\begin{verbatim}
+("Trypanosoma cruzi"[Organism] AND
+ (SIRE[All Fields] OR VIPER[All Fields]))
+\end{verbatim}
+Se ha seleccionado dicho conjunto de secuencias para observar el comportamiento del modelo sobre un conjunto que contenga secuencias repetidas. Se quiere observar como una secuencia de la complejidad de VIPER se presenta bajo un modelo de repeticiones supermaximales exactas.
+\item [Cantidad~de~secuencias]195.
+\item [Cobertura]5,195. Exigimos dos coberturas, una muy restrictiva, como es 195 y otra menos restrictiva como es 5, para determinar que valor modela mejor las repeticiones.
+\item [Repeticiones]12476 supermaximales con cobertura de 5x, 291 supermaximales con cobertura de 195x.
+\item [¿Como~se~observan~a~SIRE~y~VIPER?] En Entrez se puede encontrar a las SIRE y VIPER identificadas con los siguientes números gi2598052 y gi7248807 (VIP I) respectivamente. Se encontraron 168 supermaximales correspondientes a SIRE, y 1273 correspondientes a VIPER en los resultados con cobertura 5x. Las siguientes son las cinco repeticiones más significativas según el largo de las secuencias para SIRE\footnote{Cada secuencia se representa con la lista de subsecuencia, cada subsecuencia representada por tuplas de tres elementos, el primero es el nombre de la secuencia origen, el resto indican el inicio y fin de en la secuencia origen.}:
+{\tiny
+\begin{enumerate}
+\item TTATTATTAT TATTATTATT ATTATTATTA TTATTATTAT TATTATTATT ATTATTATTA TTATTATTAT TATTATTATT ATTATTATT\\
+<gi2598052, 563, 653>, <gi2598052, 560, 650>, <gi2598052, 557, 647>, <gi2598052, 554, 644>, <gi2598052, 551, 641>, <gi2598052, 566, 656>,
+\item CCTAACTTGT TTGGTTTCCA TAGATTATTT CAGGATCCGG CCAGCTGCCC\\
+<gi2598052, 51, 102>, <gi2598052, 489, 540>, <gi4323144, 368, 419>, <gi7248807, 3122, 3173>, <gi1679877, 2299, 2350>, <gi1911171, 761, 812>,
+\item CCCCTTTTGA TTCCCACCAC GCGGCGGGGT CTTGTG\\
+<gi3366387, 142, 179>, <gi3366450, 367, 404>, <gi3392708, 134, 171>, <gi2598052, 308, 345>, <gi1673453, 489, 526>, <gi3258841, 368, 405>,
+\item TTTTTATTTT GCCATCCCAC CCACCCCCT\\
+<gi3366285, 266, 296>, <gi1911171, 559, 589>, <gi2598052, 284, 314>, <gi4323144, 165, 195>, <gi624035, 991, 1021>, <gi7341240, 388, 418>,
+\item TAGGAGCTTG TGAAAAGAAT GATCGCGG\\
+<gi1911171, 391, 420>, <gi2598052, 113, 142>, <gi3340683, 369, 398>, <gi1749835, 141, 170>, <gi3415244, 23, 52>, <gi8118103, 3587, 3616>, <gi1666218, 73, 102>, <gi4581861, 469, 498>,
+\end{enumerate}
+}
+Con la cobertura de 195x se obtuvieron solamente 282 repeticiones pertenecientes a VIPER.Ninguna de SIRE.
+
+\end{description}
+
+\begin{figure}
+{\centering \resizebox*{1\columnwidth}{!}{\includegraphics{Tcg.vipersire.5.eps}} \par}
+\caption[Resultados. Secuencias \emph{Trypanosoma cruzi} con SIRE y VIPER (5x).]{\label{Figure:tcg.SIRE/VIPER.5x}Resultados. Secuencias \emph{Trypanosoma cruzi} con secuencias SIRE y VIPER. Cobertura 5x.}
+\end{figure}
+
+\begin{figure}
+{\centering \resizebox*{1\columnwidth}{!}{\includegraphics{Tcg.vipersire.195.eps}} \par}
+\caption[Resultados. Secuencias \emph{Trypanosoma cruzi} con SIRE y VIPER (195x).]{\label{Figure:tcg.SIRE/VIPER.195x}Resultados. Secuencias \emph{Trypanosoma cruzi} con secuencias SIRE y VIPER. Cobertura 195x.}
+\end{figure}
+
+\subsubsection{BAC ends}
+
+\begin{description}
+\item [Origen~de~las~secuencias]Entrez. Secuencias BAC ends. Las librerías BAC se componen de fragmentos de largos mayores a 100Kb. Se usan en secuenciamientos aleatorios jerárquicos. Es otra etapa del secuenciamiento donde es interesante observar la distribución de las repeticiones, ya que una gran cantidad de estas en esta etapa puede contraer grandes complicaciones en el ensamblado. En la actualidad este proceso se realiza con técnicas bioquímicas como \emph{fingerprinting} para descartar los BACs que estén con estos elementos. Ver "TIGR Sequencing Strategy for \emph{T. cruzi}" en \\ \emph{http://www.tigr.org/tdb/mdb/tcdb/seq.shtml}.\\Consulta en Entrez:
+\begin{verbatim}
+("Trypanosoma cruzi"[Organism] AND BAC[All Fields])
+\end{verbatim}
+\item [Cantidad~de~secuencias]14450.
+\item [Cobertura]14. Este número es demostrativo.
+\end{description}
+
+\begin{figure}
+{\centering \resizebox*{1\columnwidth}{!}{\includegraphics{Tcg.eps}} \par}
+\caption[Resultados. Secuencias BAC ends del \emph{Trypanosoma cruzi}.]{\label{Figure:tcg.BACend}Resultados. Secuencias BAC ends del proyecto genoma del \emph{Trypanosoma cruzi}, clon CL-Brener.}
+\end{figure}
+
+\subsection{\emph{Plasmodium falciparum}}
+
+\subsubsection{Secuencias de primera lectura}
+\begin{description}
+\item [Origen~de~las~secuencias]TIGR. Secuenciamiento WCS sobre el cromosoma 2 del \emph{Plasmodium falciparum} con una cobertura de 10x.
+\item [Cantidad~de~secuencias]21807
+\item [Cobertura]20. Para encontrar únicamente repeticiones en un conjunto de secuencias cuya cobertura es 10x, se decidió acotar en 20 la cobertura del algoritmo.
+\end{description}
+
+\begin{figure}
+{\centering \resizebox*{1\columnwidth}{!}{\includegraphics{Pfg.eps}} \par}
+\caption[Resultados. \emph{Plasmodium falciparum}.]{\label{Figure:pfg}Resultados. \emph{Plasmodium falciparum}.}
+\end{figure}
+
+\subsubsection{Cromosoma 2 completo}
+\begin{description}
+\item [Origen~de~las~secuencias]TIGR. Consenso del cromosoma 2 del \emph{Plasmodium falciparum}.
+\item [Cantidad~de~secuencias]1
+\item [Cobertura]2. Como solo es una única secuencia, se tomo el valor 2 para encontrar todos las repeticiones exactas existentes en el cromosoma.
+\end{description}
+
+Luego de realizar una serie de experimentos con dichos algoritmos se ha observado la linealidad de los algoritmos. Se puede ver a continuación la lista de las pruebas con sus respectivos resultados. En el caso que la cantidad de nodos el árbol sea inferior a 100 podrá observarse también un gráfico del mismo. Se adjunta también comparaciones gráficas sobre el crecimiento de los nodos, cantidad de supermaximales, cantidad sufijos de supermaximales, memoria usada y tiempo de la inserción.
+
+\begin{table}
+\begin{tabular}{|c||c|c|c|c|}
+\hline
+Muestras&tcruzi&tcruzi&pfg chr2&pfg chr2\\
+&VIPER/SIRE&BAC end&WGS&Completo\\
+\hline
+\hline
+Secuencias&195&14450&21807&1\\
+\hline
+Cobertura&5&14&20&2\\
+\hline
+Tiempo (seg)&8,85&278,42&470,79&2819,31\\
+\hline
+Repeticiones&12476&74692&161619&32376\\
+\hline
+Nodos&49665&4,17x$10^9$&1,10x$10^9$&99x$10^6$\\
+\hline
+Memoria (Mb)&6,6&235,01&232,86&29,56\\
+\hline
+\hline
+\end{tabular}
+\vspace{.5cm}
+
+\caption{\label{tab:ResumenMuestras}Resumen estadístico de las muestras seleccionadas.}
+\end{table}
+
+\section{\label{Conclusiones}Conclusiones}
+
+
+\subsection{Árboles de sufijos de supermaximales.}
+
+Mantener una estructura de un árbol de sufijos es muy difícil por
+el orden de almacenamiento que se necesita para una base de datos
+que se incremente diariamente con secuencias muy largas. Para almacenar
+el secuenciamiento de un genoma de \( s \) pb, con una cobertura
+de \( c \), con la tecnología actual que nos permita obtener lecturas
+de promedio \( l \), el árbol de sufijos necesita almacenar \( c\frac{s}{l} \)
+fragmentos de un largo \( l \). Con lo que nos queda que el árbol
+debe tener \( c\frac{s}{l}\frac{l(l+1)}{2}=c\frac{s(l+1)}{2} \)nodos.
+En un genoma como del \emph{T. cruzi}, que tiene un tamaño aproximado
+de \( 87.10^{6} \)pb, con una cobertura de 10, tenemos que necesitamos
+\( 28318,5.10^{7} \). Si cada nodo se podría almacenar en un byte,
+necesitaríamos de \( 2.10^{11} \)bytes, aproximadamente \( 18 \)Gb.
+
+
+\subsection{Sobre el álgebra de repeticiones.}
+
+En sí, el álgebra de repeticiones no da propiedades sobre las repeticiones.
+Solo fue definido para demostrar la validez del algoritmo. Aún así
+se han encontradas más propiedades que no son de utilidad para esta
+tesis, pero si que pueden ser de interés para futuros algoritmos sobre
+estos elementos.
+
+
+\subsection{Sobre el algoritmo y su implementación.}
+
+La principal ventaja de este algoritmo no es la velocidad en que puede
+calcular todas las repeticiones maximales, sino la posibilidad de
+consultar dichas en cualquier momento del proceso de inserción, con
+lo que no es necesario tener terminado el proceso de inserción (secuenciamiento)
+para conocer todas las repeticiones. Así se puede encarar inteligentemente
+el ensamblado de la secuencia principal, eliminando de antemano secuencias
+que sabemos que van provocar ambigüedades.
+
+Es un detalle más que importante el uso de un árbol de sufijos como
+base de la estructura de datos. La cantidad de algoritmo de consultas
+de orden lineal que existen sobre dicha estructura da una potencia
+extra a la misma. Algunos de estos algoritmos son: alineamiento local,
+semi-global y global, búsqueda de palíndromos, etc.
+
+Aún así, su uso esta limitado a la cantidad de memoria necesaria para
+procesar dicha información. Se espera poder implementar la estructura
+en disco para aumentar su capacidad, como también para reducir el
+efecto producido por el intercambio de páginas de memoria.
+
+
+\subsection{Sobre la cantidad de repeticiones supermaximales.}
+
+La cantidad de repeticiones supermaximales exactas se hace muy complicado
+realizar un estudio serio sobre las repeticiones de un conjunto grande
+de secuencias. Por eso se recomienda el uso de visualización científica
+y data-mining que simplifiquen la tarea de obtener conclusiones sobre
+las secuencias.
+
+
+\paragraph{Orden de importancia de secuencias.}
+
+¿Son importantes todas las secuencias repetidas supermaximales? La
+respuesta a esta pregunta es completamente subjetiva, por lo tanto
+dar una medida de importancia unánime es completamente irresponsable.
+Aún así se puede realizar un estudio estadístico sobre ellas viendo
+su complejidad, largo y cantidad de copias encontradas como primer
+punta del ovillo.
+
+
+\paragraph{Visualización.}
+
+La herramienta ideal para interpretar la gran cantidad de resultados
+de manera global es un gráfico. Existen varias formas de representar
+las secuencias repetidas y aquí trataremos de dar un par de ideas
+nuevas para su mejor interpretación.
+
+\begin{itemize}
+\item Grafos: Los grafos son una excelente manera de describir la composición
+de las repeticiones. Por ello, si es necesario estudiar la estructura
+de las secuencias, no hay mejor herramienta. La limitación mayor esta
+dada por la complejidad de los algoritmos sobre grafos que ayuden
+a realizar conclusiones sobre los mismos.
+
+\begin{itemize}
+\item Secuencias relacionadas por supermaximales: Este grafo se basa en
+relacionar secuencias según los maximales que incluyen. Si visualizamos
+el grafo tratando de acercar a los nodos que más ejes tienen en común
+podremos visualizar nichos de secuencias donde las mismas están compuestas
+por una repetición/es más compleja/s. El defecto principal sobre este
+grafo es la cantidad de nodos que usa dicho grafo, igual a la cantidad
+de secuencias de nuestro conjunto.
+\item Supermaximales relacionadas por secuencias: En vez de relacionar secuencias,
+ahora se relacionan supermaximales por secuencias. Esto solo reduce
+la cantidad de nodos, pero todavía sigue siendo difícil de manejar
+ya que la cantidad de ejes pasa a ser por lo menos la cantidad de
+secuencias de nuestro conjunto.
+
+\begin{itemize}
+\item Orden de repeticiones: Una manera de ver la organización de las secuencias
+repetidas es ordenar las repeticiones según su ubicación dentro de
+las secuencias que las componen. Reduce la complejidad del grafo,
+aún así en conjuntos grandes se hace difícil de representar.
+\item Orden de repeticiones sin relaciones transitivas: El grafo descripto
+anteriormente puede reducirse eliminándose los ejes transitivos. El
+defecto de este grafo es la complejidad del algoritmo para eliminar
+dichos ejes. Notar que no existen ciclos si tomamos como ciclo a aquellos
+caminos que repiten la misma copia de una repetición para una misa
+secuencia.
+\end{itemize}
+\end{itemize}
+\item Distribución de repeticiones sobre una secuencia: En vez de representar
+todas las secuencias en un único gráfico, puede visualizarse la distribución
+de las repeticiones por secuencia. La principal desventaja es la cantidad
+de secuencias que tiene el conjunto, por lo tanto se hace inútil obtener
+todas las secuencias representadas.
+\end{itemize}
+
+\paragraph{Navegación.}
+
+En vez de tener un dibujo del resultado, se puede navegar permitiendo mostrar el resultado según la importancia que se quiera dar al problema. Nuevamente, hay que tener un punto de donde partir a buscar conclusiones, dar un orden de importancia a las secuencias se hace indispensable.
+
+\begin{itemize}
+\item Navegación basada en secuencias: Cambiar de secuencia gracias a la relación de secuencias por repeticiones comunes. El resultado es un grafo de secuencias relacionadas por repeticiones, pero filtrado por el usuario.
+\item Navegación basada en repeticiones: Según una repetición se puede relacionar con otra repetición según las secuencias que las contienen. El resultado es un grafo de repeticiones relacionadas por secuencias, pero filtrado por el usuario.
+
+\begin{itemize}
+\item A partir de un conjunto seleccionable de secuencias: En vez de obtener
+las repeticiones maximales a partir del conjunto completo, se puede
+elegir un conjunto de secuencias y obtener cualquiera de los grafos
+descripto. Luego, eliminar o agregar secuencias hasta obtener un grafo
+deseado.
+\end{itemize}
+\end{itemize}
+
+\paragraph{Reformular el concepto de secuencias supermaximales.}
+
+El concepto propuesto de repetición no es suficientemente para un
+conjunto grande de secuencia. Además tiene un gran defecto, enmascara
+repeticiones que pueden tener un potencial muy grande para su estudio.
+Tomemos el caso de las islas CG; por la definición de repetición supermaximal,
+esta secuencia no es supermaximal si existe una secuencia maximal
+si la contiene, por lo tanto cualquier secuencia maximal que incluya
+la cadena CG hace que la repetición no sobresalga a la luz. Este problema
+puede resolverse con repeticiones inexactas o ampliando el concepto
+de secuencias supermaximales donde la cota de cantidad de copias no
+este dado por un número fijo, sino por un valor relativo. Por ejemplo,
+es maximal si se reduce por lo menos \( \frac{1}{3} \) la cantidad
+de copias si se le agrega un nuevo carácter.
+
+
+\subsection{Resumen de las contribuciones.}
+
+\begin{description}
+\item [Álgebra~de~subsecuencias]Existen propiedades del álgebra propuesta que no se ha desarrollado por salir del objetivo de la tesis, pero da un punto de vista interesante al tratamiento de elementos repetidos. En primer lugar puede ser la punta para desarrollar un lenguaje de consulta de este tipo de elementos, pero para ello primero se debe agregar más potencia de expresividad para incorporar, por ejemplo, repeticiones en tándem y repeticiones inexactas. También permitiría clasificar secuencias de forma unívoca. En si, es una herramienta nueva con mucho potencial en el área del estudio de repeticiones, como también en el desarrollo de algoritmos para su detección.
+\item [Nuevo~modelo~de~repeticiones~supermaximales]El modelo de repeticiones supermaximales en un conjunto de secuencias dependientes no fue planteado previamente. Creada en principio para resolver problemas relacionados con la genómica, al ser planteado para cualquier lenguaje, puede ser aplicada para la búsqueda de patrones en cualquier modelo donde exista un conjunto de muestras superpuestas hasta cierto grado de cobertura. Un ejemplo sería encontrar frases repetidas en un conjunto de trozos de hojas que provienen de copias de un mismo libro.
+\item [Árboles~de~sufijo~de~repeticiones~supermaximales]La estructura $AS^2$\\solo se especializa en supermaximales, con lo que no cae en la sobreinformación, y por basarse en una estructura muy estudiada como son los árboles de sufijo, se conoce muy bien sus propiedades.
+\item [Algoritmo~para~reconocer~repeticiones]La aplicación que se le ha dado a la teoría desarrollada corresponde al secuenciamiento de genomas bajo una técnica de secuenciamiento aleatorio. El algoritmo desarrollado permite que durante todo este proceso, que dura años, pueda mantenerse una base de datos actualizada continuamente con la información de todas las secuencias repetidas del genoma según pase el tiempo. La consulta es inmediata y valida hasta ese momento, permitiendo seleccionar mejor las secuencias a ensamblar previniendo los problemas ya descriptos. También es una herramienta muy valiosa para quienes investigan estos elementos, ya que da una pauta de la cantidad y calidad de elementos repetidos existentes
+en el genoma.
+\end{description}
+
+\subsection{Investigación futura.}
+
+\begin{description}
+\item [Implementación~de~persistencia]La implementación usa la memoria principal para almacenar la estructura $AS^2$. Aunque se conoce que puede usarse el disco, aprovechando mejor la memoria principal y no llegar al problema de intercambio de páginas, no ha sido como objetivo de la tesis dicha implementación.  También es de interés ver el comportamiento de la misma bajo un sistema concurrente, ya que en secuenciamientos a gran escala, donde más de cien máquinas aportan lecturas aleatorias durante todo el día, es necesario atender y organizar la mayor cantidad de información en el tiempo más corto posible.
+\item [Búsqueda~inexacta~de~repeticiones]Como se ha descripto en la introducción, las repeticiones tienen regiones más y menos conservadas. El algoritmo propuesto solo busca regiones conservadas, sin términos medios, con lo que no se encuentras repeticiones en el concepto biológico. Es de interés agrandar el modelo a repeticiones inexactas para mejorar la calidad de la respuesta.
+\item [Nuevos~modelos~de~repeticiones~supermaximales]Como hemos visto, el concepto de maximal dependía de la inserción de un nuevo carácter. Aquí hemos agregado el concepto de cota en cantidad de copias. Sería de interés agregar un conceptos relativos, como por ejemplo el de porcentaje de copias con respecto a su largo.
+\item [Interpretación~de~los~resultados] En esta tesis no se planteó observaciones sobre los elementos para poder caracterizarlos según su estructura. Es de interés poder clasificar de forma inteligente y unívoca estos elementos para su mejor estudio.
+\item [Visualización~de~los~resultados]La cantidad de soluciones es extraordinaria. Un resultado interesante en el mar de supermaximales es casi imperceptible, incapaz de resaltar sobre los demás. Pero de la misma manera en que se puede observar grandes movimientos de aguas bajo la superficie del mar a grandes alturas, es necesario ver las diferentes formas en que se expresan estos elementos entre ellos. Por ello se propone realizar un intenso estudio sobre la visualización de los elementos para resaltar relaciones y propiedades que son imposibles de ver con solo conocer la secuencia.
+\item [Reensamblar~subsecuencias~de~repeticiones]Existen técnicas para recuperar la historia de replicación de ADN \cite{Fitch86}. A partir de este hecho podemos realizar dos preguntas que podrían resolver el problema de reensamblar subsecuencias de repeticiones: ¿Si se puede deducir dos historias parecidas de dos repeticiones, se puede deducir que pertenecen a la misma repetición? ¿La técnica propuesta por \cite{Fitch86} es útil con fragmentos de repeticiones? También podemos preguntarnos que ocurre con la distribución y complejidad de estos elementos para saber si estos también son posible de relacionar. Hay un campo muy grande por donde investigar que puede ayudar a deducir repeticiones de gran tamaño, más grande de lo que soporta el secuenciado, y así resolver el problema de ambigüedad del ensamblado.
+\end{description}

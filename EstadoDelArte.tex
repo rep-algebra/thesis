@@ -1,0 +1,135 @@
+\chapter{\label{Estado del arte}Estado del arte}
+
+Lo que no se ha encontrado durante el proceso de investigación de esta tesis es información o artículos sobre la obtención o estadística de estos elementos durante el proceso de secuenciamiento. La totalidad de las referencias involucran el genoma completo \cite{Roach1998}, por lo que cualquier estudio es válido si se completa el secuenciamiento. Es por eso que la totalidad de las referencias de algoritmos encontradas tienen como precondición una única secuencia de donde se busca las repeticiones.
+
+\section{\label{Trabajos Relacionados}Trabajos relacionados.}
+
+Además de los artículos relacionados con la búsqueda exacta de repeticiones en una cadena de caracteres, existe un número considerable de escritos que se especializan en la detección de repeticiones degeneradas \footnote{En la literatura sobre cadena de caracteres se conoce a las repeticiones degeneradas como repeticiones aproximadas o inexactas. }. En general los métodos se dividen en dos grupos.\cite{kurtz00computation}
+
+\begin{description}
+\item [Métodos~exactos]Se basan en la formalización de un modelo de repetición, y luego
+localizan todas las regiones en una secuencia que cumplen con la definición. \cite{Fitch86,Leung91,Benson94,Kannan96,Schmidt98,Benson99,Landau01,marsan00algorithms}
+\item [Métodos~heurísticos]No pueden garantizar encontrar todas las repeticiones bajo cualquier modelo específico.\cite{BensonWaterman94,Agarwal94,Rivals97,Vincens98,Benson99,Babenko99}
+\end{description}
+
+Tampoco se ha encontrado referencias al problema de encontrar repeticiones en una colección de fragmentos de secuencias genómicas. No así, en cambio, sobre optimización de búsquedas de sufijos y prefijos de secuencias en base de datos en general\cite{jagadish00effective}, que en su objetivo de optimizar la consulta utilizan índices de subcadenas en común siendo referencias importantes para resolver el problema. Entonces se propone dividir, nuevamente, este tipos de problemas de búsqueda de repeticiones en:
+
+\begin{description}
+\item [Única~secuencia]La mayoría de los trabajan bajo este paradigma ya que se esfuerzan en buscar repeticiones en una región.
+\item [Conjunto~de~secuencias]Existen trabajos relacionados como el caso de los árboles de sufijos generalizados ( ver sección \ref{ASG} ), pero el objetivo en general es buscar palabras en textos, pero no se ha encontrado un uso genómico para este algoritmo.
+\end{description}
+
+Aún así, para describir mejor el objetivo de esta tesis hay que incluir una nueva clasificación para búsquedas de repeticiones en un conjunto de secuencias.
+
+\begin{description}
+\item [Secuencias~independientes]Las secuencias del conjunto de entrada no están superpuestas. Todos los algoritmos existentes trabajan bajo esta suposición.
+\item [Secuencias~dependiente]Las secuencias son subsecuencias de una misma secuencia y están superpuestas. Llamaremos \emph{cobertura} a la cantidad de veces que una posición de la secuencia mayor se encuentra representada en las subsecuencias. Por ejemplo, la mayor cobertura del conjunto \( { abcc, yuab, ccak, uab } \) de la secuencia $\alpha = yuabccak$ es de $3x$, ya que $ab$ se encuentra 3 veces en $\alpha$. La menor cobertura es de $1x$, ya que $k$ solo se encuentra una única vez en el conjunto. La cobertura promedio se calcula símbolo a símbolo, por lo que en promedio $\alpha$ tiene una cobertura de $1.875x$. No se ha encontrado trabajos previos.
+\end{description}
+
+Bajo esta clasificación, esta tesis se concentra en la \emph{búsqueda de repeticiones exactas en un conjunto de secuencias dependientes}. Para justificar la elección de repeticiones exactas debemos responder la siguiente pregunta: ¿Qué tan similar es una secuencia a otra? Existen varios modelos de distancia que tienen en cuenta mutaciones, equivalencia entre nucleótidos, llegando a ser probabilísticamente complejos. Aún así, tomando cualquiera de estas forma para medir la similitud, no se puede asegurar que dos secuencias similares correspondan a dos fragmentos homólogos. Basándose en éste hecho se puede suponer que la igualdad entre secuencias es una buena aproximación al concepto de homología, por ello en el resto de la tesis solo se hablará de igualdad entre secuencias para identificar elementos repetidos. Esta afirmación no quita valor a las normas de similitud existentes, solo simplifica el problema que interesa tratar para poder, a futuro, plantear un modelo más complejo.
+
+\section{\label{Modelo de Gusfield de repeticiones}Modelo de Gusfield de
+repeticiones}
+
+Un problema a la hora de identificar secuencias repetidas es determinar cuando una secuencias es repetida, o mejor dicho, cuando una repetición es importante. En principio la secuencia vacía es repetición para cualquier cadena de cualquier lenguaje, por lo tanto es una repetición trivial y no se tendrán en cuenta. Otras repeticiones triviales son las de largo uno, los símbolos. También se incluyen todas las subsecuencias de una secuencia repetida y así se tiene una cantidad desorbitante de soluciones sin valor informativo. En pos de definirlas de manera tal que las soluciones sean significativas se ha incluido el concepto de \emph{maximal} dando las siguientes definiciones\cite{Gus97}.
+
+\begin{defn}
+Un \emph{par maximal} (o un par de repetición maximal) en una cadena \( S \) es un par de subcadenas idénticas \( \alpha \) y \( \beta \) en \( S \) tal que el carácter inmediatamente posterior (anterior) de \( \alpha \) es diferente al carácter posterior (anterior) de \( \beta \). De otra manera, si extendemos \( \alpha \) y \( \beta \) en ambas direcciones dejan de ser iguales. Un par maximal esta representado por una tupla \( <p_{1},p_{2},n\prime > \), donde \( p_{1} \) y \( p_{2} \) indican la posición de inicio en ambas subcadenas y \( n\prime \) indica el largo. Para una cadena \( S \) definimos \( R(S) \) como el conjunto de todos los pares maximales de \( S \).
+\end{defn}
+
+Eligiendo la secuencia \( S=xabcyiiizabcqabcyrxar \), se encuentran tres ocurrencias de la secuencia \( abc \). La primera y la segunda ocurrencia conforman el primer par maximal \( <2,10,3> \). La segunda con la tercera conforman el par \( <10,14,3> \). Pero no es par maximal la primera con la tercera ocurrencia. En cambio, si se toma la secuencia \( abcy \) se obtiene que sus dos únicas ocurrencias son el par maximal \( <2,14,4> \). Ahora, si la secuencia es \( cxxaxxaxxb \) observamos un par maximal solapado correspondiente a la secuencia \( xxaxx \). Notar que este caso es permitido por la definición.
+
+Ahora, en algunos casos es útil conseguir todas los pares maximales de una secuencia, en otros casos la cantidad de soluciones puede ser inmanejable, por lo tanto sería útil definir un concepto más restringido.
+
+\begin{defn}
+Una \emph{repetición maximal} \( \alpha \) es una subcadena de \( S \) que corresponde a un par maximal de \( S \). En otros términos, \( \alpha \) es una repetición maximal en \( S \) si hay una tupla \( <p_{1},p_{2},|\alpha |>\in R(S) \) y \( \alpha \) aparece en las posiciones \( p_{1} \) y \( p_{2} \) en \( S \). Diremos que \( R\prime (S) \) es el conjunto de repeticiones maximales de \( S \).
+\end{defn}
+
+Del ejemplo anterior con la secuencia \( S \) donde ambas cadenas \( abc \) y \( abcy \) son repeticiones maximales, se puede observar que la cantidad de pares es mayor que la cantidad de repeticiones. Esto ocurre porque cada cadena esta representado por lo menos un par maximal, entonces concluimos que \( |R(S)|>|R\prime (S)| \). En general la cantidad de \( |R\prime (S)| \) va a ser muy inferior que \( |R(S)| \) por lo que, aunque este conjunto es m\'{a}s modesto, da una idea clara de la solución al problema.
+
+Ahora, existen casos en que la definición de repetición maximal no es suficiente. Tomando una nueva secuencia \( S=a\alpha bx\alpha ya\alpha b \). Aquí la subcadena \( \alpha \) es un repetición maximal como lo es también \( a\alpha b \), la cual es supersecuencia de \( \alpha \). Quizás no se desea reportar secuencias \( \alpha \) como repetición ya que existe una repetición maximal que la contiene que puede ser más informativa.
+
+\begin{defn}
+Una \emph{repetición supermaximal} es una repetición maximal que no es subcadena de otra repetición maximal.
+\end{defn}
+
+Para Gusfield, las repeticiones maximales y supermaximales y los pares maximales son las únicas tres maneras válidas para definir estructuras útiles de repeticiones exactas. Esta afirmación solo es válida en el modelo de buscar repeticiones en una única secuencia, a continuación se planteará los mismos conceptos para un conjunto de secuencias.
+
+\subsection{\label{MGG}Modelo de Gusfield generalizado.}
+
+Tomemos ahora un conjunto de secuencias \( S \). Para cada secuencia \( s \in S \) podemos usar las misma definiciones de par maximal, repetición maximal, y repetición supermaximal, pero no ocurre lo mismo para un conjunto de secuencias ya que lo que para una secuencia no es repetida para \( s \) puede que lo sea para un conjunto si es compartida por otra secuencia. Para ello generalizaremos las definiciones de par maximal, repetición maximal y supermaximal para un conjunto de secuencias. Previamente se definirá a \( \alpha (\pi ,\sigma ) \) como la subsecuencia de \( \alpha \) que comienza en la posición \( \pi \) y termina en \( \sigma \). Y \( S_{\tau } \) es la secuencia identificada con \( \tau \) en el conjunto de secuencias \( S \).
+
+\begin{defn}
+Un \emph{par maximal} es un par de subsecuencia idénticas \( \alpha \) y \( \beta \) de secuencias existentes en \( S \) las cuales dejan de ser iguales si se las extiende en ambos lados.
+
+Un par maximal del conjunto \( S \) se representa por la tupla \( <id_{a},id_{b},p_{a},p_{b},n\prime >_{S} \), donde \( id_{a} \) y \( id_{b} \) son la identificación de las secuencias en \( S \), \( p_{a} \) y \( p_{b} \) son la ubicación de la repetición en la secuencia $S$ y \( n\prime \) es el largo. Para un conjunto \( S \) definimos \( R(S) \) como el conjunto de todas las tuplas maximales de \( S \).
+
+\begin{eqnarray*}
+R(S) & = & \{<id_{a},id_{b},p_{a},p_{b},n\prime >|\\
+(id_{a} & \neq & id_{b}\vee p_{a}\neq p_{b})\wedge \\
+S_{id_{a}}\left( p_{a},p_{a}+l\right) & = & S_{id_{b}}\left( p_{b},p_{b}+n\prime \right) \wedge \\
+S_{id_{a}}\left( p_{a},p_{a}+n\prime +1\right) & \neq & S_{id_{b}}\left( p_{b},p_{b}+n\prime +1\right) \wedge \\
+S_{id_{a}}\left( p_{a}-1,p_{a}+n\prime \right) & \neq & S_{id_{b}}\left( p_{b}-1,p_{b}+n\prime \right) \}
+\end{eqnarray*}
+
+\end{defn}
+
+A partir del del conjunto de secuencias \( S=\{ \)\( xabclop, \) \( lapabx, \) \( pabcjabp\} \) se concluye: la secuencia \( ab \) corresponde para los siguientes pares maximales \( <1,2,2,4,2> \), \( <1,3,2,6,2> \), \( <2,3,4,2,2> \), \( <2,3,4,6,2> \) y \( <3,3,2,4,2> \). Obsérvese que la definición nos permite realizar pares con la misma secuencia, incluyendo de esta manera la definición de par maximal para una única secuencia. Para el caso de la secuencia \( abc \) se tiene únicamente el par \( <1,3,2,2,3> \).
+
+\begin{defn}
+Una secuencia \( \alpha \) es \emph{repetición maximal} de un conjunto \( S \) si existe un par maximal que corresponda a \( \alpha \). En si, \( \alpha \) es una repetición maximal en \( S \) si hay una tupla \( \left\langle i_{a},i_{b},p_{a},p_{b},|\alpha |\right\rangle \in R(S) \) y \( \alpha \) aparece en las posiciones \( p_{a} \) en la secuencia \( i_{a} \) y \( p_{b} \) en la secuencia \( i_{b} \) del conjunto \( S \). Diremos que \( R\prime (S) \) es el conjunto de repeticiones maximales de \( S \). \[ R\prime (S)=\{\alpha \in \Delta ^{*}|(<i_{a},i_{b},p_{a},p_{b},l>\in R(S))(S_{i_{b}}\left( p_{b},p_{b}+l\right) =\alpha )\}\] 
+\end{defn}
+
+Entonces, tomando el mismo ejemplo anterior, las secuencias \( ab \) y \( abc \) pertenecen a \( R'(S) \). Nuevamente se concluye que el conjunto \( R\prime (S) \) es inferior que \( R(S) \), por corresponder a cada secuencia en \( R'(S) \) por lo menos una tupla en \( R(S) \). De la misma manera vamos reduciendo la respuesta, pero todavía se puede tener una solución demasiado abultada para tratarla fácilmente. La próxima definición limita más la respuesta, de igual manera en que lo hacía el modelo de Gusfield.
+
+\begin{defn}
+Una repetición \emph{supermaximal} es una repetición maximal que no es subcadena de otra repetición maximal. Llamaremos \( M(S) \) al conjunto de las repeticiones supermaximales.\[ M(S)=\left\{ \alpha \in R'(S)\left| \left( \exists \beta ,\gamma \in \Delta ^{*}\right) \left( \beta \alpha \gamma \neq \alpha \wedge \beta \alpha \gamma \in R\acute{'}(S)\right) \right. \right\} \] En este caso, podemos ver que \( abc \) es repetición supermaximal y no así \( ab \). Así se obtiene un conjunto más pequeño, con lo que se espera que sea mucho más tratable.
+\end{defn}
+
+\subsection{Árboles de sufijos para la búsqueda de repeticiones en una secuencia.}
+
+Los árboles de sufijos\cite{Weiner73,McCreight76,Ukkonen95} y arreglo de sufijos\cite{Manber93} son estructuras de datos que facilitan la búsqueda de cadenas. Gusfield realiza una detallada discusión sobre estos elementos en \cite{Gus97}. Como el arreglo de sufijos es una interpretación del árbol de sufijos sobre un arreglo, solo se discutirá únicamente sobre los árboles de sufijos. 
+
+En principio, estos árboles de sufijos tienen una gran potencia ya que permiten diferentes tipos de consultas sobre los elementos que se encuentran almacenados en la estructura. La necesidad de explicar esta estructura es que es la base del algoritmo propuesto para resolver el problema. En si, Gusfield propone un algoritmo sobre la búsqueda de repeticiones sobre un árbol de sufijos dando las definiciones previamente explicadas, pero en esta nueva aproximación no se desarrolla un árbol de sufijo de una secuencia sino de las secuencias supermaximales de un conjunto de secuencias.
+
+Los árboles de sufijos de una secuencia \( \alpha \) son árboles, parecidos a los Trie\cite{Fredkin60} o PATRICIA\cite{Mirrison68}, cuyas ramas corresponden a un sufijo%
+\footnote{Si \( \alpha =a_{1}a_{2}a_{3}\ldots a_{n-2}a_{n-1}a_{n} \), entonces
+\( \alpha _{i}=a_{i}a_{i+1}a_{i+2}\ldots a_{n-2}a_{n-1}a_{n} \) es
+el sufijo de \( \alpha \) en la posición \( i \).
+
+Por ejemplo: para \( \alpha =mississippi \), tenemos los siguientes
+sufijos: \( \alpha _{1}=mississippi=\alpha \), \( \alpha _{2}=ississippi \),
+\( \alpha _{3}=ssissippi \), \( \alpha _{4}=sissippi \), \( \alpha _{5}=issippi \),
+\( \alpha _{6}=ssippi \), \( \alpha _{7}=sippi \), \( \alpha _{8}=ippi \),
+\( \alpha _{9}=ppi \), \( \alpha _{10}=pi \), \( \alpha _{11}=i \),
+\( \alpha _{11}=i \), \( \alpha _{12}=\lambda \).
+} de \( \alpha \). Por ejemplo, sea la secuencia \( \alpha =xabcyiiizabcqabcyrxar \).
+En la figura \ref{Figure:ArbolSufijo.}
+\begin{figure}
+\resizebox*{3in}{4in}{\includegraphics{suffixtree.eps}}
+
+\caption{\label{Figure:ArbolSufijo.}Árbol de sufijos para {}``xabcyiiizabcqabcyrxar''.}
+\end{figure}
+ vemos el árbol de sufijo para \( \alpha \). Si recorremos el árbol desde la raíz, en profundidad, vamos a recorrer las ramas que corresponden a los sufijos de \( \alpha \).
+
+Un árbol de sufijos puede ser usado para buscar una subcadena de largo \( m \) en tiempo \( O(m) \). Como existen \( n(n+1)/2 \) subcadenas en una secuencia \( \alpha \) de largo \( n \) no queda claro como es posible construir el árbol en un tiempo \( O(n) \). Agregando solo un carácter a la secuencia \( \alpha \), se tienen \( n+1 \) nuevas secuencias, pero ellas no son independientes. Weiner (1973) dio el primer algoritmo y Mc. Creight (1976) dio una mejor aproximación para la construcción de árboles de sufijos cuando se procesa a \( \alpha \) de derecha a izquierda. Solo más tarde Ukkonen (1992, 1995) dio un algoritmo linean procesando la secuencia de izquierda a derecha. 
+
+\subsection{\label{ASG}Árbol de sufijos generalizado}
+
+El árbol de sufijos que es capaz de almacenar una colección de palabras se lo conoce como \emph{ASG}. Tiene las mismas propiedades que el árbol de sufijo para una sola secuencia, pero se diferencian por la etiqueta usada en cada uno de los ejes del árbol. Mientras que el primero almacena una colección de referencias a la secuencia y subsecuencia relacionada con el eje del árbol, el segundo solo almacena colección de subsecuencia. Como se ve, el árbol común es un árbol generalizado con una única referencia a la misma secuencia.
+
+Gusfield propone en \cite{Gus97} dos algoritmos de orden lineal que encuentran todas repeticiones maximales y supermaximales. Este modelo conlleva tener un árbol de sufijos armado en donde se realiza la búsqueda. Luego proponen una compactación del árbol dejando solo las ramas donde intervienen repeticiones. Como podremos observar en el capítulo \ref{Modelo} vamos a intercalar estas nociones con ventajas relacionadas a la técnica de secuenciamiento aleatoria.
+
+\section{\label{El problema de encontrar...}Repeticiones en el secuenciamiento.}
+
+Como se ha dicho, en un modelo aleatorio, las secuencias se obtienen de regiones aleatorias del genoma. Durante este proceso las secuencias se van almacenando en una base de datos. Esta base de datos se las conoce como base de datos de primera pasada, ya que no han sido clasificadas%
+\footnote{Las secuencias se clasifican por región a las que pertenecen, técnicas usadas para la clasificación y otros datos según corresponda a la especie estudiada y la técnica usada. } ni filtradas%
+\footnote{Las secuencias se filtran de repeticiones conocidas y de basura que correspondan al vector usado para secuenciar. }. Una vez revisadas, las secuencias pasan a una base de datos depurada. Este proceso termina cuando se obtenga la cobertura predeterminada \ref{Cobertura}.
+
+¿Qué ocurre con las repeticiones durante todo este proceso? Si la repetición es conocida es eliminada para que no provoque ambigüedades en el proceso de ensamblado. En el caso contrario se verá que existe grandes ambigüedades y falsos clusters en el ensamblado. Lo ideal es no llegar al ensamblado con repeticiones.
+
+Existe un problema innato que hace no fácil el reconocimiento en este modelo. Una cobertura de 10x implica que necesitamos haber leído cada nucleótido en promedio 10 veces. Entonces podemos esperar que una región va a tener por lo menos 10 lecturas. Es una conclusión directa suponer que si existe una repetición \( \alpha \), por haber sido leída 10 veces al final del procedimiento, debe encontrarse en el conjunto de las secuencias obtenidas más que esta cantidad. Si existen dos copias de una repetición, entonces deben existir $c$ lecturas de cada una, donde $c$ es la cobertura dada para el genoma $G$. Por lo tanto, podemos asegurar que si una secuencia se repite más de $2 \dot c$ veces es una repetición en $G$.
+
+\vspace{1cm}
+\fbox{ \parbox{10cm}{\textbf{Problema:} Se busca encontrar repeticiones supermaximales en una colección de secuencias independientes bajo una cobertura de $2c$, donde $c$ es la cobertura con la que se ha secuenciado la región del genoma.} }
+

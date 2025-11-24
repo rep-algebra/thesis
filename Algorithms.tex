@@ -1,0 +1,38 @@
+\documentclass[12pt,a4paper,spanish]{amsbook}
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\usepackage{babel}
+\usepackage{graphics}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\begin{document}
+
+\begin{algorithm}
+\caption{Insertar: Inserta los sufijos supermaximales de $S$ al árbol.}
+\label{Algoritmo: Insertar}
+\begin{algorithmic}
+\FORALL {Sufijos $\epsilon$ de $S$}
+\STATE Llegar al nodo $N$ correspondiente a un prefijo $\pi$ de $\epsilon$, tal que $\pi$ es $\epsilon$ o $N$ es una hoja del árbol.
+\STATE Agregar $\pi$ a $N$.
+\IF {$\pi$ no es $\epsilon$}
+\STATE Expandir el nodo $N$ según el símbolo $s$, donde $\pi s$ es prefijo de $\epsilon$.
+\ENDIF
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Expandir: Expande un nodo $N$ según el símbolo $s$.}
+\label{Algoritmo: Expandir}
+\begin{algorithmic}
+\IF{ Cantidad de subsecuencias del nodo $N$ que continuan con el símbolo $s$ es mayor o igual a $c$ }
+\STATE Mover todas las subsecuencias del nodo $N$ que se continuan con el símbolo $s$ al nodo correspondiente al eje $s$.
+\FORALL{ Rama $i$ del nodo $M$ de la rama $s$ }
+\STATE Expandir el nodo $M$ según el símbolo $i$.
+\ENDFOR
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+\end{document}

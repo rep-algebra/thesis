@@ -1,0 +1,16 @@
+*.aux
+*.log
+*.bbl
+*.blg
+*.brf
+*.cb
+*.ind
+*.idx
+*.ilg
+*.inx
+*.ps
+*.dvi
+*.pdf
+*.toc
+*.out
+tags

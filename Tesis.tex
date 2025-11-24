@@ -1,0 +1,88 @@
+%%\documentclass[12pt,a4paper,spanish]{amsbook}
+%%\documentclass[12pt,a4paper,spanish,final,oneside]{iuthesis}
+\documentclass[12pt,a4paper,spanish,final,oneside]{iuthesis}
+\usepackage[T1]{fontenc}
+\usepackage[activeacute,spanish]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{graphics}
+
+\makeatletter
+
+\let\SF@@footnote\footnote
+\def\footnote{\ifx\protect\@typeset@protect
+    \expandafter\SF@@footnote
+  \else
+    \expandafter\SF@gobble@opt
+  \fi
+}
+\expandafter\def\csname SF@gobble@opt \endcsname{\@ifnextchar[%]
+  \SF@gobble@twobracket
+  \@gobble
+}
+\edef\SF@gobble@opt{\noexpand\protect
+  \expandafter\noexpand\csname SF@gobble@opt \endcsname}
+\def\SF@gobble@twobracket[#1]#2{}
+\addto\extrasspanish{\bbl@deactivate{~}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+ \numberwithin{section}{chapter}
+ \theoremstyle{plain}
+ \newtheorem{thm}{Teorema}[section]
+ \numberwithin{equation}{section} %% Comment out for sequentially-numbered
+ \numberwithin{figure}{section} %% Comment out for sequentially-numbered
+ \theoremstyle{plain}
+ \newtheorem{cor}[thm]{Corolario} %%Delete [thm] to re-start numbering
+ \theoremstyle{definition}
+ \newtheorem{defn}[thm]{Definici\'on}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\makeatletter
+
+\makeatother
+\AtBeginDocument{
+  \renewcommand{\labelitemi}{\(\cdot\)}
+}
+
+\begin{document}
+
+\title{Búsqueda de secuencias repetidas en un modelo de secuenciamiento
+aleatorio.}
+\author{Cristian S. Rocha (LU 369/96)}
+
+\advisor{Lic. Irene Loiseau}
+
+\degree{Tesis de Licenciatura}
+\departmentname{Departamento de Computaci\'{o}n }
+\department{Facultad de Ciencias Exactas y Naturales}
+\university{Universidad de Buenos Aires}
+
+\submitdate{Agosto de 2002}
+
+\maketitle
+
+{\newpage
+\thispagestyle{empty}
+\vfill
+\include{Abstract} }
+
+{\newpage
+\thispagestyle{empty}
+\vfill
+\include{Thanks} }
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+\include{Introduccion}
+\include{EstadoDelArte}
+\include{Solucion}
+\include{Resultados}
+
+\bibliographystyle{plain}
+\bibliography{Tesis}
+
+\end{document}

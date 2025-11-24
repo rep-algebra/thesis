@@ -1,0 +1,503 @@
+@book{Attwood1999,
+	author = {Teresa Attwood, David Parry-Smith},
+	title = {Introduction to Bioinformatics},
+	publisher = {AddisonWesley},
+	year = 1999
+}
+
+@article{BensonWaterman94,
+	author = {G. Benson and M. S. Waterman},
+	title = {A method for fast database search for all k-nucleotide repeats.},
+	journal = {Nucleic Acids Res},
+	year = 1994,
+	volume = 22,
+	number = 22,
+	pages = {4828-36},
+	month = {Nov 11},
+	affiliation = {A significant portion of DNA consists of repeating patterns of
+various sizes, from very small (one, two and three nucleotides) to very large
+(over 300 nucleotides). Although the functions of these repeating regions are
+not well understood, they appear important for understanding the expression,
+regulation and evolution of DNA. For example, increases in the number of
+trinucleotide repeats have been associated with human genetic disease, including
+Fragile-X mental retardation and Huntington's disease. Repeats are also useful
+as a tool in mapping and identifying DNA; the number of copies of a particular
+pattern at a site is often variable among individuals (polymorphic) and is
+therefore helpful in locating genes via linkage studies and also in providing
+DNA fingerprints of individuals. The number of repeating regions is unknown as
+is the distribution of pattern sizes. It would be useful to search for such
+regions in the DNA database in order that they may be studied more fully. The
+DNA database currently consists of approximately 150 million basepairs and is
+growing exponentially. Therefore, any program to look for repeats must be
+efficient and fast. In this paper, we present some new techniques that are
+useful in recognizing repeating patterns and describe a new program for rapidly
+detecting repeat regions in the DNA database where the basic unit of the repeat
+has size up to 32 nucleotides. It is our hope that the examples in this paper
+will illustrate the unrealized diversity of repeats in DNA and that the program
+we have developed will be a useful tool for locating new and interesting
+repeats.},
+	keywords = {Base Sequence Consensus Sequence DNA/genetics *Databases, Factual
+Evolution Human Models, Statistical Molecular Sequence Data *Repetitive
+Sequences, Nucleic Acid Sequence Alignment *Software Support, U.S. Gov't,
+Non-P.H.S. Support, U.S. Gov't, P.H.S.},
+	abstract = {Department of Mathematics, University of Southern California,
+Los Angeles 90089-1113.}
+}
+
+@article{BorkCopley2001,
+	author = {Peer Bork, Richard Copley},
+	title = {Filling in the gaps},
+	journal = {Nature},
+	year = 2001,
+	volume = 409,
+	pages = {218-820},
+	month = {Febrary}
+}
+
+@book{DEK98,
+	author = {Durbin, R. and Eddy, S. and Krogh, A. and Mitchison, G.},
+	title = {Biological sequence analysis: probabilistic models of proteins and nucleic acids.},
+	publisher = {Cambridge University Press, UK.},
+	year = 1998
+}
+
+@misc{DEO,
+	author = {U.S. Department of Energy},
+	title = {Human Genome Project Information, Oak Ridge National Laboratory},
+	howpublished = {Part of the Primer on Molecular Genetics},
+	month = {June},
+	year = 1992,
+	note = {Genome Glossary}
+}
+
+@article{Fitch86,
+	author = {W. M. Fitch and T. Smith and J. L. Breslow},
+	title = {Detecting internally repeated sequences and inferring the history of duplication.},
+	journal = {Methods Enzymol},
+	year = 1986,
+	volume = 128,
+	pages = {773-88},
+	keywords = {Amino Acid Sequence Apolipoprotein A-I Apolipoproteins/*genetics
+Apolipoproteins A/genetics Apolipoproteins E/genetics Codon Comparative Study
+Evolution Human Lipoproteins, HDL/genetics Mathematics Probability Repetitive
+Sequences, Nucleic Acid}
+}
+
+@book{Gus97,
+	author = {Gusfield, D.},
+	title = {Algorithms on strings, trees, and sequences.},
+	publisher = {Cambridge University Press, UK.},
+	year = 1997
+}
+
+@misc{IUPACBioinorganic,
+	author = {International Union of Pure and Applied Chemistry.},
+	title = {Glossary of Terms used in Bioinorganic Chemistry, Recommendations.},
+	year = 1997,
+	note = {450+ definitions. http://www.chem.qmw.ac.uk/iupac/bioinorg/ }
+}
+
+@misc{IUPACCompendium,
+	author = {compiled by Alan D. McNaught and Andrew Wilkinson },
+	title = {International Union of Pure and Applied Chemistry, Compendium of Chemical Terminology: Recommendations },
+	howpublished = {Blackwell Science },
+	year = 1997,
+	note = {"Gold Book" 6500+ definitions. http://www.chemsoc.org/chembytes/goldbook/ }
+}
+
+@article{Kannan96,
+	author = {Kannan, S. K.; Myers, E. W.},
+	title = {An Algorithm for Locating Nonoverlapping Regions of Maximum Alignment Score},
+	journal = {SIAM Journal on Computing},
+	year = 1996,
+	volume = 25,
+	number = 3,
+	pages = {648-662}
+}
+
+@article{Landau01,
+	author = {G. M. Landau and J. P. Schmidt and D. Sokol},
+	title = {An algorithm for approximate tandem repeats.},
+	journal = {J Comput Biol},
+	year = 2001,
+	volume = 8,
+	number = 1,
+	pages = {1-18},
+	affiliation = {Department of Computer Science, Haifa University, Haifa 31905,
+Israel. landau@poly.edu},
+	keywords = {*Algorithms Base Sequence Human Molecular Sequence Data
+Receptors, Antigen, T-Cell, alpha-beta/genetics Repetitive Sequences, Nucleic
+Acid Support, Non-U.S. Gov't Support, U.S. Gov't, Non-P.H.S. Tandem Repeat
+Sequences},
+	abstract = {A perfect single tandem repeat is defined as a nonempty string
+that can be divided into two identical substrings, e.g., abcabc. An approximate
+single tandem repeat is one in which the substrings are similar, but not
+identical, e.g., abcdaacd. In this paper we consider two criterions of
+similarity: the Hamming distance (k mismatches) and the edit distance (k
+differences). For a string S of length n and an integer k our algorithm reports
+all locally optimal approximate repeats, r = umacro u, for which the Hamming
+distance of umacro and u is at most k, in O(nk log (n/k)) time, or all those for
+which the edit distance of umacro and u is at most k, in O(nk log k log (n/k))
+time. This paper concentrates on a more general type of repeat called multiple
+tandem repeats. A multiple tandem repeat in a sequence S is a (periodic)
+substring r of S of the form r = u(a)u', where u is a prefix of r and u' is a
+prefix of u. An approximate multiple tandem repeat is a multiple repeat with
+errors; the repeated subsequences are similar but not identical. We precisely
+define approximate multiple repeats, and present an algorithm that finds all
+repeats that concur with our definition. The time complexity of the algorithm,
+when searching for repeats with up to k errors in a string S of length n, is
+O(nka log (n/k)) where a is the maximum number of periods in any reported
+repeat. We present some experimental results concerning the performance and
+sensitivity of our algorithm. The problem of finding repeats within a string is
+a computational problem with important applications in the field of molecular
+biology. Both exact and inexact repeats occur frequently in the genome, and
+certain repeats occurring in the genome are known to be related to diseases in
+the human.}
+}
+
+@article{Lander88,
+	author = { E. S. Lander and M. S. Waterman },
+	title = {Genomic mapping by fingerprinting random clones: a mathematical analysis.},
+	journal = {Genomics},
+	year = 1988,
+	volume = 2,
+	number = 3,
+	pages = {231-9 },
+	month = apr,
+	keywords = { Results from physical mapping projects have recently been
+                        reported for the genomes of Escherichia coli, Saccharomyces
+                        cerevisiae, and Caenorhabditis elegans, and similar projects
+                        are currently being planned for other organisms. In such
+                        projects, the physical map is assembled by first "fingerprinting"
+                        a large number of clones chosen at random from a recombinant
+                        library and then inferring overlaps between clones with
+                        sufficiently similar fingerprints. Although the basic approach
+                        is the same, there are many possible choices for the fingerprint
+                        used to characterize the clones and the rules for declaring
+                        overlap. In this paper, we derive simple formulas showing
+                        how the progress of a physical mapping project is affected
+                        by the nature of the fingerprinting scheme. Using these
+                        formulas, we discuss the analytic considerations involved
+                        in selecting an appropriate fingerprinting scheme for a
+                        particular project. },
+	affiliation = { Whitehead Institute for Biomedical Research, Cambridge Center,
+                        Massachusetts 02142. },
+	abstract = { Animal Caenorhabditis/genetics *Chromosome Mapping *Cloning,
+                        Molecular Escherichia coli/genetics Mathematics *Nucleotide
+                        Mapping Saccharomyces cerevisiae/genetics Support, Non-U.S.
+                        Gov't Support, U.S. Gov't, Non-P.H.S. Support, U.S. Gov't,
+                        P.H.S. }
+}
+
+@article{Leung91,
+	author = {M. Y. Leung and B. E. Blaisdell and C. Burge and S. Karlin},
+	title = {An efficient algorithm for identifying matches with errors in multiple long molecular sequences.},
+	journal = {J Mol Biol},
+	year = 1991,
+	volume = 221,
+	number = 4,
+	pages = {1367-78},
+	month = {Oct 20},
+	affiliation = {Division of Mathematics, Computer Science and Statistics, University of Texas, San Antonio 78249-0664.},
+	keywords = {*Algorithms Base Sequence Consensus Sequence/genetics *Databases, Factual Escherichia coli/genetics Molecular Sequence Data Mutation/genetics Repetitive Sequences, Nucleic Acid/genetics Sequence Alignment/*methods Support, Non-U.S. Gov't Support, U.S. Gov't, Non-P.H.S. Support, U.S. Gov't, P.H.S.},
+	abstract = {An efficient algorithm is described for finding matches, repeats and other word relations, allowing for errors, in large data sets of long
+molecular sequences. The algorithm entails hashing on fixed-size words in conjunction with the use of a linked list connecting all occurrences of the same word. The average memory and run time requirement both increase almost linearly with the total sequence length. Some results of the program's performance on a database of Escherichia coli DNA sequences are presented.}
+}
+
+@proceedings{NCBINfw200,
+	title = {The Human Genome Sequence: NCBI's First Annotated Edition },
+	year = 2000,
+	series = {NCBI News },
+	organization = {NCBI},
+	month = {Fall/Winter}
+}
+
+@proceedings{NCBINs1999,
+	title = {DNA Sequences from Times Past in GenBank },
+	year = {1999 },
+	series = {NCBI News },
+	organization = {NCBI},
+	month = { Spring}
+}
+
+@manual{NCBIm2001,
+	title = {Contig Assembly and Annotation Process},
+	organization = {NCBI},
+	year = 2001
+}
+
+@phdthesis{Roach1998,
+	author = {Roach, J. C.},
+	title = {Random Subcloning, Pairwise End Sequencing, and the Molecular Evolution of the Vertebrate Trypsinogens},
+	school = {University of Washington},
+	year = 1998
+}
+
+@article{Schmidt98,
+	author = {Schmidt, J. P.},
+	title = {All highest scoring paths in weighted grid graphs and their application to finding all approximate repeats in strings},
+	journal = {SIAM Journal on Computing},
+	year = 1998,
+	volume = 27,
+	number = 4,
+	pages = {972-992},
+	month = {August}
+}
+
+@book{SeM97,
+	author = {Setubal, J.C. and Meidanis, J. },
+	title = {Introduction to Computational Molecular Biology },
+	publisher = {PWS, Boston MA. },
+	year = 1997
+}
+
+@book{Wat95,
+	author = {Waterman, M.S. },
+	title = {Introduction to Computational Biology: maps, sequences and genomes.},
+	publisher = {Chapman \& Hall, London, UK},
+	year = 1995
+}
+
+@misc{agarwal-repeat,
+	author = {Pankaj Agarwal and David J. States},
+	title = {The Repeat Pattern Toolkit (RPT): Analyzing the Structure and Evolution of the C. elegans Genome},
+	url = {citeseer.nj.nec.com/135324.html}
+}
+
+@misc{kurtz00computation,
+	author = {S. Kurtz and E. Ohlebusch and C. Schleiermacher and J. Stoye and R. Giegerich},
+	title = {Computation and visualization of degenerate repeats in complete genomes},
+	year = 2000,
+	text = {S. Kurtz, E. Ohlebusch, C. Schleiermacher, J. Stoye and R. Giegerich. Computation and visualization of degenerate repeats in complete genomes, In Eight International Symposium on Intelligent Systems for Molecular Biology, La Jolla, California, 2000. AAAI Press.},
+	url = {citeseer.nj.nec.com/kurtz00computation.html}
+}
+
+@article{sagot98identifying,
+	author = {Marie-France Sagot and Eugene W. Myers},
+	title = {Identifying Satellites and Periodic Repetitions in Biological Sequences},
+	journal = {Journal of Computational Biology},
+	year = 1998,
+	volume = 5,
+	number = 3,
+	pages = {539-554},
+	url = {citeseer.nj.nec.com/article/sagot98identifying.html}
+}
+
+@misc{marsan00algorithms,
+	author = {L. Marsan and M. Sagot},
+	title = {Algorithms for extracting structured motifs using a sux tree with an application
+    to promoter and regulatory site consensus identication},
+	year = 2000,
+	text = {L. Marsan and M.-F. Sagot. Algorithms for extracting structured motifs
+    using a sux tree with an application to promoter and regulatory site consensus
+    identication. J. Computational Biology, 7:345-362, 2000.},
+	url = {citeseer.nj.nec.com/329429.html}
+}
+
+@article{Benson94,
+	author = {Benson, G.},
+	title = {A Space Efficient Algorithm for Finding the Best Nonoverlapping Alignment Score},
+	journal = {Theoretical Computer Science},
+	year = 1995,
+	volume = 145,
+	number = {1\&2},
+	pages = {357-369},
+	month = {July}
+}
+
+@article{Agarwal94,
+	author = {P. Agarwal and D. J. States},
+	title = {The Repeat Pattern Toolkit (RPT): analyzing the structure and evolution of the C. elegans genome.},
+	journal = {Proc Int Conf Intell Syst Mol Biol},
+	year = 1994,
+	volume = 2,
+	pages = {1-9},
+	affiliation = {Institute for Biomedical Computing Washington University, St.  Louis, MO 63110, USA.},
+	keywords = {Animal Caenorhabditis elegans/*genetics Evolution Genome Models, Theoretical Repetitive Sequences, Nucleic Acid/*genetics Sequence Analysis},
+	abstract = {Over 3.6 million bases of DNA sequence from chromosome III of the C. elegans have been determined. The availability of this extended region of contiguous sequence has allowed us to analyze the nature and prevalence of repetitive sequences in the genome of a eukaryotic organism with a high gene density. We have assembled a Repeat Pattern Toolkit (RPT) to analyze the patterns of repeats occurring in DNA. The tools include identifying significant local alignments (utilizing both two-way and three-way alignments), dividing the set of alignments into connected components (signifying repeat families), computing evolutionary distance between repeat family members, constructing minimum spanning trees from the connected components, and visualizing the evolution of the repeat families. Over 7000 families of repetitive sequences were identified. The size of the families ranged from isolated pairs to over 1600 segments of similar sequence. Approximately 12.3\% of the analyzed sequence participates in a repeat element.}
+}
+
+@article{Rivals97,
+	author = {E. Rivals and O. Delgrange and J. P. Delahaye and M. Dauchet and M.  O. Delorme and A. Henaut and E. Ollivier},
+	title = {Detection of significant patterns by compression algorithms: the case of approximate tandem repeats in DNA sequences.},
+	journal = {Comput Appl Biosci},
+	year = 1997,
+	volume = 13,
+	number = 2,
+	pages = {131-6},
+	month = apr,
+	affiliation = {Laboratoire d'Informatique Fondamentale de Lille, CNRS URA 369, Villeneuve d'Ascq, France. rivals@lifl.fr},
+	keywords = {*Algorithms Base Sequence Chromosomes, Fungal/genetics DNA/*genetics DNA, Fungal/genetics Evaluation Studies Molecular Sequence Data *Repetitive Sequences, Nucleic Acid Saccharomyces cerevisiae/genetics Sequence Analysis, DNA/methods/statistics \& numerical data Software},
+	abstract = {MOTIVATION: Compression algorithms can be used to analyse genetic sequences. A compression algorithm tests a given property on the sequence and uses it to encode the sequence: if the property is true, it reveals some structure of the sequence which can be described briefly, this yields a description of the sequence which is shorter than the sequence of nucleotides given in extenso. The more a sequence is compressed by the algorithm, the more significant is the property for that sequence. RESULTS: We present a compression algorithm that tests the presence of a particular type of dosDNA (defined ordered sequence-DNA): approximate tandem repeats of small motifs (i.e. of lengths $<$ 4). This algorithm has been experimented with on four yeast chromosomes. The presence of approximate tandem repeats seems to be a uniform structural property of yeast chromosomes.}
+}
+
+@article{Benson99,
+	author = {G. Benson},
+	title = {Tandem repeats finder: a program to analyze DNA sequences.},
+	journal = {Nucleic Acids Res},
+	year = 1999,
+	volume = 27,
+	number = 2,
+	pages = {573-80},
+	month = {Jan 15},
+	affiliation = {Department of Biomathematical Sciences, Mount Sinai School of Medicine, New York, NY 10029-6574, USA. benson@ecology.biomath.mssm.edu},
+	keywords = {*Algorithms Chromosomes, Fungal/genetics Cluster Analysis Friedreich Ataxia/genetics Genes, Fungal Human Membrane Proteins Models, Statistical Mutation *Pattern Recognition Phosphotransferases (Alcohol Group Acceptor)/genetics Probability Pseudogenes Receptors, Antigen, T-Cell, alpha-beta/genetics Sequence Analysis, DNA/*methods Software Support, U.S.  Gov't, Non-P.H.S. *Tandem Repeat Sequences},
+	abstract = {A tandem repeat in DNA is two or more contiguous, approximate copies of a pattern of nucleotides. Tandem repeats have been shown to cause human disease, may play a variety of regulatory and evolutionary roles and are important laboratory and analytic tools. Extensive knowledge about pattern size, copy number, mutational history, etc. for tandem repeats has been limited by the inability to easily detect them in genomic sequence data. In this paper, we present a new algorithm for finding tandem repeats which works without the need to specify either the pattern or pattern size. We model tandem repeats by percent identity and frequency of indels between adjacent pattern copies and use statistically based recognition criteria. We demonstrate the algorithm's speed and its ability to detect tandem repeats that have undergone extensive mutational change by analyzing four sequences: the human frataxin gene, the human beta T cellreceptor locus sequence and two yeast chromosomes. These sequences range in size from 3 kb up to 700 kb. A World Wide Web server interface atc3.biomath.mssm.edu/trf.html has been established for automated use of the program.}
+}
+
+@article{Babenko99,
+	author = {V. N. Babenko and P. S. Kosarev and O. V. Vishnevsky and V. G.  Levitsky and V. V. Basin and A. S. Frolov},
+	title = {Investigating extended regulatory regions of genomic DNA
+sequences.},
+	journal = {Bioinformatics},
+	year = 1999,
+	volume = 15,
+	number = {7-8},
+	pages = {644-53},
+	month = {Jul-Aug},
+	affiliation = {Laboratory of Theoretical Genetics, Institute of Cytology and Genetics, Lavrentyev Avenue, 10, Novosibirsk, 630090, Russia.  bob@bionet.nsc.ru},
+	keywords = {Algorithms Animal Base Sequence *Computer Systems CpG Islands DNA/*genetics Databases, Factual *Genes, Regulator Internet Promoter Regions (Genetics) Software Support, Non-U.S. Gov't Support, U.S. Gov't, P.H.S. TATA Box},
+	abstract = {MOTIVATION: Despite the growing volume of data on primary nucleotide sequences, the regulatory regions remain a major puzzle with regard to their function. Numerous recognising programs considering a diversity of properties of regulatory regions have been developed. The system proposed here allows the specific contextual, conformational and physico-chemical properties to be revealed based on analysis of extended DNA regions. RESULTS: The Internet-accessible computer system RegScan, designed to analyse the extended regulatory regions of eukaryotic genes, has been developed. The computer system comprises the following software: (i) programs for classification dividing a set of promoters into TATA-containing and TATA-less promoters and promoters with and without CpG islands; (ii) programs for constructing (a) nucleotide frequency profiles, (b) sequence complexity profiles and (c) profiles of conformational and physico-chemical properties; (iii) the program for constructing the sets of degenerate oligonucleotide motifs of a specified length; and (iv) the program searching for and visualising repeats in nucleotide sequences. The system has allowed us to demonstrate the following characteristic patterns of vertebrate promoter regions: the TATA box region is flanked by regions with an increased G+C content and increased bending stiffness, the TATA box content is asymmetric and promoter regions are saturated with both direct and inverted repeats.  AVAILABILITY: The computer system RegScan is available via the Internet at http://www.mgs.bionet.nsc. ru/Systems/RegScan, http://www.cbil.upenn.edu/mgs/systems/regscan/.}
+}
+
+@article{Vincens98,
+	author = {P. Vincens and L. Buffat and C. Andre and J. P. Chevrolat and J. F.  Boisvieux and S. Hazout2},
+	title = {A strategy for finding regions of similarity in complete genome sequences.},
+	journal = {Bioinformatics},
+	year = 1998,
+	volume = 14,
+	number = 8,
+	pages = {715-25},
+	affiliation = {1Departement de Biologie (FR 36), Ecole Normale Superieure, 46 rue d'Ulm, 75230 Paris Cedex 05, France.},
+	keywords = {*Algorithms Base Sequence Comparative Study *DNA *Genome *Sequence Alignment Support, Non-U.S. Gov't},
+	abstract = {MOTIVATION: Complete genomic sequences will become available in the future. New methods to deal with very large sequences (sizes beyond 100 kb) efficiently are required. One of the main aims of such work is to increase our understanding of genome organization and evolution. This requires studies of the locations of regions of similarity. RESULTS: We present here a new tool, ASSIRC ('Accelerated Search for SImilarity Regions in Chromosomes'), for finding regions of similarity in genomic sequences. The method involves three steps: (i) identification of short exact chains of fixed size, called 'seeds', common to both sequences, using hashing functions; (ii) extension of these seeds into putative regions of similarity by a 'random walk' procedure; (iii) final selection of regions of similarity by assessing alignments of the putative sequences. We used simulations to estimate the proportion of regions of similarity not detected for particular region sizes, base identity proportions and seed sizes. This approach can be tailored to the user's specifications. We looked for regions of similarity between two yeast chromosomes (V and IX). The efficiency of the approach was compared to those of conventional programs BLAST and FASTA, by assessing CPU time required and the regions of similarity found for the same data set. AVAILABILITY: Source programs are freely available at the following address: ftp://ftp.biologie.ens. fr/pub/molbio/assirc.tar.gz CONTACT: vincens@biologie.ens.fr, hazout@urbb.jussieu.fr}
+}
+
+@misc{jagadish00effective,
+	author = {H. V. Jagadish and Nick Koudas and Divesh Srivastava},
+	title = {On effective multi-dimensional indexing for strings},
+	year = 2000,
+	pages = {403--414},
+	url = {citeseer.nj.nec.com/jagadish00effective.html}
+}
+
+@inproceedings{Weiner73,
+	author = {P. Weiner},
+	title = {Linear pattern matching algorithms},
+	booktitle = {Proceedings of the IEEE 14th Annual Symposium on Switching and Automata Theory},
+	year = 1973,
+	pages = {1-11},
+	journal = {Proceedings of the IEEE 14th Annual Symposium on Switching and Automata Theory}
+}
+
+@article{Ukkonen95,
+	author = {E. Ukkonen},
+	title = {On-line construction of suffix trees},
+	journal = {Algorithmica},
+	year = 1995,
+	volume = 14,
+	pages = {249-260}
+}
+
+@article{McCreight76,
+	author = {E. McCreight},
+	title = {A space-economical suffix tree construction algorithm},
+	journal = {Journal of the ACM},
+	year = 1976,
+	volume = 23,
+	pages = {262-272}
+}
+
+@article{Manber93,
+	author = {U. Manber and G. Myers},
+	title = {Suffix arrays: A new method for on-line string searches},
+	journal = {SIAM J. Comput.},
+	year = 1993,
+	volume = 22,
+	pages = {935--948}
+}
+
+@article{Fredkin60,
+	author = {E. Fredkin},
+	title = {Trie Memory},
+	journal = { ACM },
+	year = 1960,
+	volume = 3,
+	number = 9,
+	pages = {490-499},
+	month = {Sept}
+}
+
+@article{Mirrison68,
+	author = {D. R. Morrison},
+	title = {PATRICIA - Practical Algorithm to Retrieve Information Coded in Alphanumeric},
+	journal = { ACM },
+	year = 1968,
+	volume = 15,
+	number = 4,
+	pages = {514-534},
+	month = Oct
+}
+
+@misc{MR1999,
+	title = {Meeting Report.},
+	author = {Leishmania Genome Network.},
+	year = 1999
+}
+
+@article{Russo00,
+	author = {Eugene Russo},
+	title = {Reading the Human Genome},
+	journal = {The Scientist},
+	year = 2000,
+	volume = 14,
+	number = 15,
+	pages = 8,
+	month = Jul,
+	howpublished = {NEWS}
+}
+
+@article{Ashburner00,
+	author = {M. Ashburner et al.},
+	title = {Gene Ontology: tool for the unification of biology},
+	journal = {Nature Genetics},
+	year = 2000,
+	volume = 25,
+	number = 25,
+	pages = 9,
+	month = May
+}
+
+@techreport{RMTC99,
+	author = {Wim M. Degrave},
+	title = {Report on the meeting of the Trypanosoma cruzi genome initiative},
+	institution = {Trypanosoma cruzi genome initiative},
+	year = 1999,
+	month = {April}
+}
+
+@MastersThesis{Romero2001,
+  author =       {Rocio C. Romero Zaliz},
+  title =        {Reconocimiento y Descripcion de Objetos Complejos en
+Biologa Molecular},
+  school =       {Universidad de Buenos Aires},
+  year =         {2001}
+} 
+
+@book{MGA,
+  author = {Anthony J. F. Griffiths and William M. Gelbart and Jeffrey H. Miller and Richard C. Lewontin},
+  title = {Modern Genetic Analysis},
+  publisher = {W. H. Freeman and Company},
+  year = 1999
+}
+
+@article{Vazquez2000,
+  author = {M. Vazquez M. and C. Ben-Dov and H. Lorenzi and T. Moore and A. Schijman and M. Levin},
+  title = {The Short Interspersed Repetitve Element of Trypanosoma cruzi, SIRE, is part of VIPER, an unusual retroelement related to Long Terminal Repeat retrotransposons},
+  journal = {Proc. Natl. Acad. Sci. USA},
+  volume = 97,
+  number = 5,
+  pages = { 2128-2133 },
+  year = 2000
+}
+
